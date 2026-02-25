@@ -14,15 +14,18 @@ def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
 
+from datetime import datetime
+
 def process_image_for_food(image_path):
     if not api_key:
         return {"error": "OPENAI_API_KEY missing"}
 
-    print(f"Analyzing {image_path} with GPT-4o...")
+    today_str = datetime.now().strftime("%B %d, %Y")
+    print(f"Analyzing {image_path} with GPT-4o (Today is {today_str})...")
     
     base64_image = encode_image(image_path)
     
-    prompt = """
+    prompt = f"""
     CRITICAL MISSION: You are a "Free Food Hunter" for a university. 
     Look at this image (Instagram post or story) and hunt for ANY signs of free food.
     
@@ -44,13 +47,13 @@ def process_image_for_food(image_path):
     - food_provided: EXACTLY what food is mentioned.
     - has_free_food: Boolean (True ONLY if food is explicitly promised)
     - has_time_and_location: Boolean (True ONLY if BOTH a specific time AND a specific location are mentioned in the post)
-    - is_future_event: Boolean (True if the event date is clearly on or after February 25, 2025. False if it clearly happened before this date).
+    - is_future_event: Boolean (True if the event date is clearly on or after {today_str}. False if it clearly happened before this date).
     - food_rank: 1-5 scale (1=coffee/cookies, 3=Pizza/Sandwiches, 5=Chipotle/Full Buffet/Catering)
     - confidence_score: 1-10 (How sure are you that there is actually free food for attendees?)
 
     Rules:
     - If there is NO specific time AND NO specific location, set has_time_and_location to FALSE.
-    - If the event date is before February 25, 2025, set is_future_event to FALSE.
+    - If the event date is before {today_str}, set is_future_event to FALSE.
     - If it's a "Food Drive" (where you GIVE food), has_free_food should be FALSE.
     - If it's a "Bake Sale" (where you BUY food), has_free_food should be FALSE.
     - Return ONLY the JSON.
