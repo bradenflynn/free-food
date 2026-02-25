@@ -38,12 +38,13 @@ def scrape_instagram_handle(handle):
             if img_url:
                 os.makedirs("downloads", exist_ok=True)
                 img_data = requests.get(img_url).content
-                filename = f"downloads/{handle}_post_{count}_{int(time.time())}.jpg"
+                # Use shortcode in filename for stability across runs
+                filename = f"downloads/{handle}_{post.shortcode}.jpg"
                 with open(filename, 'wb') as handler:
                     handler.write(img_data)
                 
-                print(f"Saved post {count} to {filename}")
-                results.append(filename)
+                print(f"Saved post {post.shortcode} to {filename}")
+                results.append((filename, post.shortcode))
                 count += 1
                 
     except Exception as e:
@@ -56,10 +57,9 @@ async def run_multi_scraper(handles):
     all_files = []
     
     for handle in handles:
-        # We can run the synchronous Instaloader in the async loop
-        # For simplicity in this script, we just run it directly.
+        # returns list of (filename, shortcode)
         files = scrape_instagram_handle(handle.strip())
-        all_files.extend([(handle.strip(), f) for f in files])
+        all_files.extend([(handle.strip(), f[0], f[1]) for f in files])
         await asyncio.sleep(2) # Give it a small pause between accounts
         
     return all_files

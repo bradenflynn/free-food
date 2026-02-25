@@ -46,14 +46,19 @@ def process_image_for_food(image_path):
     - location: Building/Room number or campus spot
     - food_provided: EXACTLY what food is mentioned.
     - has_free_food: Boolean (True ONLY if food is explicitly promised)
-    - has_time_and_location: Boolean (True ONLY if BOTH a specific time AND a specific location are mentioned in the post)
-    - is_future_event: Boolean (True ONLY if the event date is strictly AFTER {today_str}. If an event is on {today_str}, it is NOT in the future, so set this to FALSE).
+    - is_future_event: Boolean (True ONLY if the event date is strictly AFTER {today_str}. If an event is on {today_str}, it is NOT in the future, so set this to FALSE). 
+    
+    CRITICAL YEAR RULE:
+    - If the poster says "2025", and today is "{today_str}", this event is ONE YEAR OLD and MUST be marked as is_future_event: false.
+    - If no year is mentioned, assume 2026 unless the month has already passed.
+    
     - food_rank: 1-5 scale (1=coffee/cookies, 3=Pizza/Sandwiches, 5=Chipotle/Full Buffet/Catering)
     - confidence_score: 1-10 (How sure are you that there is actually free food for attendees?)
 
     Rules:
     - If there is NO specific time AND NO specific location, set has_time_and_location to FALSE.
     - If the event date is on OR before {today_str}, set is_future_event to FALSE.
+    - Any event from 2025 is a past event.
     - If it's a "Food Drive" (where you GIVE food), has_free_food should be FALSE.
     - If it's a "Bake Sale" (where you BUY food), has_free_food should be FALSE.
     - Return ONLY the JSON.
