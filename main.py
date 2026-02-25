@@ -96,7 +96,18 @@ async def run_discovery():
             print(f"Skipping {image_path} due to error.")
             continue
 
-        # Save EVERY event now
+        # Strict Filtering:
+        # 1. Must have time AND location
+        if event_data.get('has_time_and_location') is False:
+            print(f"Skipping {image_path}: Missing time or location.")
+            continue
+            
+        # 2. Must be a future event (today or later)
+        if event_data.get('is_future_event') is False:
+            print(f"Skipping {image_path}: Past event.")
+            continue
+
+        # Save event if it passes filters
         save_event(event_data, handle, image_path)
 
 if __name__ == "__main__":

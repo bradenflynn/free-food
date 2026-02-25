@@ -43,10 +43,14 @@ def process_image_for_food(image_path):
     - location: Building/Room number or campus spot
     - food_provided: EXACTLY what food is mentioned.
     - has_free_food: Boolean (True ONLY if food is explicitly promised)
+    - has_time_and_location: Boolean (True ONLY if BOTH a specific time AND a specific location are mentioned in the post)
+    - is_future_event: Boolean (True if the event date is clearly on or after February 25, 2025. False if it clearly happened before this date).
     - food_rank: 1-5 scale (1=coffee/cookies, 3=Pizza/Sandwiches, 5=Chipotle/Full Buffet/Catering)
     - confidence_score: 1-10 (How sure are you that there is actually free food for attendees?)
 
     Rules:
+    - If there is NO specific time AND NO specific location, set has_time_and_location to FALSE.
+    - If the event date is before February 25, 2025, set is_future_event to FALSE.
     - If it's a "Food Drive" (where you GIVE food), has_free_food should be FALSE.
     - If it's a "Bake Sale" (where you BUY food), has_free_food should be FALSE.
     - Return ONLY the JSON.
