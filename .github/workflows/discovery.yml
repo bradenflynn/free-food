@@ -1,0 +1,36 @@
+name: Instagram Discovery
+
+on:
+  workflow_dispatch: # Allows manual trigger from the "Actions" tab
+  schedule:
+    - cron: '0 0 * * *' # Automatically runs every day at midnight
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Discovery
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python main.py
+
+      - name: Commit and Push Database Changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add free_food.db downloads/
+          git commit -m "Auto-update discovery data" || echo "No changes to commit"
+          git push
