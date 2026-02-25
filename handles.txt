@@ -1,0 +1,9 @@
+usdbas
+usdmarketing
+usd.sfa
+wib_usd
+usd.ibc
+usd.salesclub
+usdsibc
+usdeclub
+usddata_analytics

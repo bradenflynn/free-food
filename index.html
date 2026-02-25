@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFF Admin | Discovery Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #050505;
+            color: #fff;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-header {
+            border-left: 4px solid #e52e71;
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body class="p-8 pb-24">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-16">
+            <div>
+                <h1 class="text-5xl font-bold gradient-text tracking-tight">Free Food Discovery</h1>
+                <p class="text-gray-400 mt-2 text-lg">University of San Diego | Admin Control</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="glass px-6 py-3 rounded-2xl flex items-center gap-3">
+                    <span class="w-3 h-3 bg-pink-500 rounded-full animate-pulse"></span>
+                    <span id="pending-count" class="font-bold text-xl">0</span> <span class="text-gray-400">Total
+                        Finds</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section 1: Confirmed Free Food -->
+        <section class="mb-20">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-white">Confirmed Free Food 🍕</h2>
+                <p class="text-gray-400">AI found explicit mentions of food in these posts.</p>
+            </div>
+            <div id="confirmed-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Confirmed events injected here -->
+            </div>
+            <div id="confirmed-empty" class="hidden py-12 text-center glass rounded-3xl mt-4">
+                <p class="text-gray-500 text-lg italic">No confirmed food found in this batch.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Potential Food / General Events -->
+        <section>
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-white">General Events 📅</h2>
+                <p class="text-gray-400">No explicit food mentioned, but worth a double-check.</p>
+            </div>
+            <div id="general-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- General events injected here -->
+            </div>
+            <div id="general-empty" class="hidden py-12 text-center glass rounded-3xl mt-4">
+                <p class="text-gray-500 text-lg italic">No other events discovered.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001';
+
+        async function fetchEvents() {
+            try {
+                const res = await fetch(`${API_BASE}/api/events`);
+                const events = await res.json();
+                renderEvents(events);
+            } catch (err) {
+                console.error("Failed to fetch events:", err);
+            }
+        }
+
+        function createCard(event) {
+            const isConfirmed = event.has_free_food;
+            return `
+                <div class="glass rounded-[2rem] overflow-hidden card-hover flex flex-col h-full bg-neutral-900/40">
+                    <div class="relative h-72 overflow-hidden group bg-neutral-950">
+                        <img src="${API_BASE}/${event.image_path}" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                        
+                        <div class="absolute top-4 left-4 flex gap-2">
+                             ${isConfirmed ? `
+                                <div class="bg-pink-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                                    Score: ${event.food_rank}/5
+                                </div>
+                             ` : ''}
+                            <div class="bg-blue-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                                Conf: ${event.confidence_score * 10}%
+                            </div>
+                        </div>
+                        
+                        <div class="absolute bottom-4 left-6">
+                            <span class="bg-white/10 backdrop-blur-md text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-md border border-white/10">
+                                @${event.source_handle}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="mb-6">
+                            <h3 class="text-2xl font-bold text-white leading-tight mb-2">${event.club_name || 'Organization'}</h3>
+                            <p class="${isConfirmed ? 'text-pink-400' : 'text-blue-400'} font-semibold text-lg">
+                                ${event.food_provided || (isConfirmed ? 'Free Food Detected' : 'General Club Event')}
+                            </p>
+                        </div>
+                        
+                        <div class="space-y-3 text-sm text-gray-400 mb-8 mt-auto">
+                            <div class="flex items-center gap-3">
+                                <span class="text-lg opacity-80">📍</span> 
+                                <span>${event.location || 'Location Not Specified'}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-lg opacity-80">🕒</span> 
+                                <span>${event.date || 'TBD'} • ${event.time || 'TBD'}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="updateStatus(${event.id}, 'approve')" class="bg-white text-black font-bold py-4 rounded-2xl hover:bg-neutral-200 transition-all active:scale-95">Approve</button>
+                            <button onclick="updateStatus(${event.id}, 'reject')" class="bg-neutral-800 text-neutral-400 font-bold py-4 rounded-2xl hover:bg-neutral-700 hover:text-white transition-all active:scale-95">Skip</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEvents(events) {
+            const confirmedGrid = document.getElementById('confirmed-grid');
+            const generalGrid = document.getElementById('general-grid');
+            const totalCount = document.getElementById('pending-count');
+
+            const confirmedEmpty = document.getElementById('confirmed-empty');
+            const generalEmpty = document.getElementById('general-empty');
+
+            totalCount.innerText = events.length;
+
+            const confirmedEvents = events.filter(e => e.has_free_food);
+            const generalEvents = events.filter(e => !e.has_free_food);
+
+            confirmedGrid.innerHTML = confirmedEvents.map(createCard).join('');
+            generalGrid.innerHTML = generalEvents.map(createCard).join('');
+
+            confirmedEvents.length === 0 ? confirmedEmpty.classList.remove('hidden') : confirmedEmpty.classList.add('hidden');
+            generalEvents.length === 0 ? generalEmpty.classList.remove('hidden') : generalEmpty.classList.add('hidden');
+        }
+
+        async function updateStatus(id, action) {
+            await fetch(`${API_BASE}/api/events/${id}/${action}`, { method: 'POST' });
+            fetchEvents();
+        }
+
+        fetchEvents();
+    </script>
+</body>
+
+</html>

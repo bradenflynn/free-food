@@ -1,0 +1,7 @@
+playwright
+google-generativeai
+python-dotenv
+requests
+Pillow
+openai
+instaloader
