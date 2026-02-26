@@ -24,7 +24,6 @@ open index.html
 echo "🔍 Running the Instagram Hunter..."
 python main.py
 
-
 echo "✅ Scan complete. Refresh your browser to see results."
 
 # Wait for background process if needed, or exit

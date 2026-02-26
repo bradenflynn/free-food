@@ -1,0 +1,56 @@
+# --- GENERAL USD ---
+uofsandiego
+usd_as
+torerolife
+usdgradlife
+usdadmissions
+usdcas
+# --- HOUSING / LLCs ---
+usd_advocate
+usd_collaborate
+usd_cultivate
+usd_illuminate
+usd_innovate
+usd__inspire
+usdtlc
+# --- BUSINESS ---
+usd_business
+usd_knauss
+usd_knauss_career
+usd_realestate
+usd_marketing_club
+# --- SPORTS ---
+usdclubbaseball
+usdmensclubbasketball
+climbing.usd
+usdcxc
+usddanceco
+usd_clubgolf
+usdhockey
+usd_bjj
+usdmenslacrosse
+usdwomenslax
+usdclubpickleball
+usd_rugby
+usdwrugby
+usd_sailing
+usdmcsoccer
+usdwcsoccer
+usdclubsoftball
+usdsurf
+usdclubswim
+toreroclubtennis
+usdfrisbee
+usdmcvb
+usdwclubvb
+usdwomenspolo
+# --- OTHER ---
+usd_associatedstudents
+usdcreativezone
+diegotorero
+usd_csl
+usd.mcc
+usd.fsl
+usd_outreach
+usd_university_ministry
+usd_careers

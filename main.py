@@ -74,7 +74,7 @@ async def run_discovery():
         handles = [line.strip() for line in f if line.strip()]
     
     # Optional: Rotate or limit handles per run to avoid bans
-    subset = handles[:15] # Scan 15 handles per run for safety
+    subset = handles[:50] # Scan up to 50 handles per run
     print(f"Scanning {len(subset)} handles...")
 
     # 2. Scrape (Posts + Stories)

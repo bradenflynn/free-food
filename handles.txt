@@ -3,7 +3,14 @@ usdmarketing
 usd.sfa
 wib_usd
 usd.ibc
-usd.salesclub
+usd_salesclub
 usdsibc
 usdeclub
 usddata_analytics
+usdufmc
+usdfuso
+usd.asa 
+usd_fsga
+asa.usd
+usd_asu 
+usdlawbls

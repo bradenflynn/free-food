@@ -99,27 +99,54 @@
             }
         }
 
+        function formatDate(dateStr) {
+            if (!dateStr || !dateStr.includes('-')) return dateStr;
+            const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+            const date = new Date(dateStr + 'T00:00:00');
+            if (isNaN(date.getTime())) return dateStr;
+            const month = months[date.getMonth()];
+            const day = date.getDate();
+            return `${month}-${day}`;
+        }
+
         function createCard(event) {
             const isConfirmed = event.has_free_food;
+            const rank = event.food_rank || 1;
+
+            let rankColor = "bg-blue-600/90";
+            let rankLabel = "Tier 1: Snacks";
+            let borderStyle = "border-white/10";
+            let glowStyle = "";
+
+            if (rank === 2) {
+                rankColor = "bg-emerald-600/90";
+                rankLabel = "Tier 2: Meal";
+            } else if (rank >= 3) {
+                rankColor = "bg-amber-500/90 text-black";
+                rankLabel = "Tier 3: Elite ✨";
+                borderStyle = "border-amber-500/30";
+                glowStyle = "shadow-[0_0_20px_rgba(245,158,11,0.2)]";
+            }
+
             return `
-                <div class="glass rounded-[2rem] overflow-hidden card-hover flex flex-col h-full bg-neutral-900/40">
+                <div class="glass rounded-[2rem] overflow-hidden card-hover flex flex-col h-full bg-neutral-900/40 border ${borderStyle} ${glowStyle}">
                     <div class="relative h-72 overflow-hidden group bg-neutral-950">
                         <img src="${API_BASE}/${event.image_path}" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
                         
                         <div class="absolute top-4 left-4 flex gap-2">
                              ${isConfirmed ? `
-                                <div class="bg-pink-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                                    Score: ${event.food_rank}/5
+                                <div class="${rankColor} backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">
+                                    ${rankLabel}
                                 </div>
                              ` : ''}
-                            <div class="bg-blue-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                                Conf: ${event.confidence_score * 10}%
+                            <div class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold shadow-lg border border-white/10">
+                                AI Confidence: ${event.confidence_score * 10}%
                             </div>
                         </div>
                         
                         <div class="absolute bottom-4 left-6">
-                            <span class="bg-white/10 backdrop-blur-md text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-md border border-white/10">
+                            <span class="bg-black/60 backdrop-blur-md text-[10px] uppercase tracking-widest font-black px-3 py-1 rounded-md border border-white/20">
                                 @${event.source_handle}
                             </span>
                         </div>
@@ -128,25 +155,26 @@
                     <div class="p-8 flex flex-col flex-grow">
                         <div class="mb-6">
                             <h3 class="text-2xl font-bold text-white leading-tight mb-2">${event.club_name || 'Organization'}</h3>
-                            <p class="${isConfirmed ? 'text-pink-400' : 'text-blue-400'} font-semibold text-lg">
+                            <p class="${rank >= 3 ? 'text-amber-400' : (rank === 2 ? 'text-emerald-400' : 'text-blue-400')} font-bold text-lg">
                                 ${event.food_provided || (isConfirmed ? 'Free Food Detected' : 'General Club Event')}
                             </p>
                         </div>
                         
-                        <div class="space-y-3 text-sm text-gray-400 mb-8 mt-auto">
-                            <div class="flex items-center gap-3">
-                                <span class="text-lg opacity-80">📍</span> 
-                                <span>${event.location || 'Location Not Specified'}</span>
+                        <div class="space-y-4 text-sm text-gray-400 mb-8 mt-auto">
+                            <div class="flex items-start gap-3">
+                                <span class="text-xl mt-0.5 opacity-80">📍</span> 
+                                <span class="leading-tight">${event.location || 'Location Not Specified'}</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="text-lg opacity-80">🕒</span> 
-                                <span>${event.date || 'TBD'} • ${event.time || 'TBD'}</span>
+                                <span class="text-xl opacity-80">🕒</span> 
+                                <span class="font-black text-white text-base">${formatDate(event.date)}</span>
+                                <span class="opacity-60 text-base">• ${event.time || 'TBD'}</span>
                             </div>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="updateStatus(${event.id}, 'approve')" class="bg-white text-black font-bold py-4 rounded-2xl hover:bg-neutral-200 transition-all active:scale-95">Approve</button>
-                            <button onclick="updateStatus(${event.id}, 'reject')" class="bg-neutral-800 text-neutral-400 font-bold py-4 rounded-2xl hover:bg-neutral-700 hover:text-white transition-all active:scale-95">Skip</button>
+                            <button onclick="updateStatus(${event.id}, 'approve')" class="bg-white text-black font-black py-4 rounded-2xl hover:bg-neutral-200 transition-all active:scale-95 text-sm uppercase tracking-wider">Approve</button>
+                            <button onclick="updateStatus(${event.id}, 'reject')" class="bg-neutral-800 text-neutral-400 font-bold py-4 rounded-2xl hover:bg-neutral-700 hover:text-white transition-all active:scale-95 text-sm uppercase">Skip</button>
                         </div>
                     </div>
                 </div>
@@ -161,10 +189,24 @@
             const confirmedEmpty = document.getElementById('confirmed-empty');
             const generalEmpty = document.getElementById('general-empty');
 
-            totalCount.innerText = events.length;
+            // 1. Strict Future Filter (Today is 2026-02-25 per system prompt)
+            const today = new Date('2026-02-25T00:00:00');
+            const futureEvents = events.filter(e => {
+                const eventDate = new Date(e.date + 'T00:00:00');
+                return eventDate > today; // Only show events STRICTLY in the future (tomorrow or later)
+            });
 
-            const confirmedEvents = events.filter(e => e.has_free_food);
-            const generalEvents = events.filter(e => !e.has_free_food);
+            // 2. Sort by date chronological
+            futureEvents.sort((a, b) => {
+                if (!a.date) return 1;
+                if (!b.date) return -1;
+                return a.date.localeCompare(b.date);
+            });
+
+            totalCount.innerText = futureEvents.length;
+
+            const confirmedEvents = futureEvents.filter(e => e.has_free_food);
+            const generalEvents = futureEvents.filter(e => !e.has_free_food);
 
             confirmedGrid.innerHTML = confirmedEvents.map(createCard).join('');
             generalGrid.innerHTML = generalEvents.map(createCard).join('');

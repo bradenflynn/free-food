@@ -26,12 +26,12 @@ def scrape_instagram_handle(handle):
     try:
         profile = instaloader.Profile.from_username(L.context, handle)
         
-        # We only want the first 2 posts
+        # We only want the first 3 posts
         count = 0
         posts = profile.get_posts()
         
         for post in posts:
-            if count >= 2:
+            if count >= 3:
                 break
                 
             img_url = post.url
