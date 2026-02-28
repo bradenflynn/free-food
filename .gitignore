@@ -1,7 +1,6 @@
+# .venv and temporary files
 .venv/
 browser_data/
-downloads/
-free_food.db
 __pycache__/
 .env
 debug_*.jpg

@@ -91,11 +91,26 @@
 
         async function fetchEvents() {
             try {
-                const res = await fetch(`${API_BASE}/api/events`);
-                const events = await res.json();
+                console.log("Fetching events...");
+                let response;
+                try {
+                    // Try local API first
+                    response = await fetch(`${API_BASE}/api/events`);
+                    if (!response.ok) throw new Error();
+                } catch {
+                    console.log("Public Mode: Loading data.json");
+                    // Use a cache-buster for GitHub Pages
+                    response = await fetch(`data.json?v=${Date.now()}`);
+                }
+                const events = await response.json();
+                console.log(`Loaded ${events.length} events.`);
                 renderEvents(events);
             } catch (err) {
-                console.error("Failed to fetch events:", err);
+                console.error("Critical Error: Could not load events.", err);
+                const grids = ['confirmed-grid', 'general-grid'];
+                grids.forEach(id => {
+                    document.getElementById(id).innerHTML = `<div class="col-span-full py-12 text-center glass rounded-3xl"><p class="text-red-400">Error loading data.json. Make sure you pushed your changes!</p></div>`;
+                });
             }
         }
 
@@ -128,10 +143,13 @@
                 glowStyle = "shadow-[0_0_20px_rgba(245,158,11,0.2)]";
             }
 
+            // Public vs Local Image Handling
+            const imgUrl = event.image_path;
+
             return `
                 <div class="glass rounded-[2rem] overflow-hidden card-hover flex flex-col h-full bg-neutral-900/40 border ${borderStyle} ${glowStyle}">
                     <div class="relative h-72 overflow-hidden group bg-neutral-950">
-                        <img src="${API_BASE}/${event.image_path}" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105">
+                        <img src="${imgUrl}" onerror="this.src='${API_BASE}/${imgUrl}'; this.onerror=null;" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
                         
                         <div class="absolute top-4 left-4 flex gap-2">
@@ -189,11 +207,15 @@
             const confirmedEmpty = document.getElementById('confirmed-empty');
             const generalEmpty = document.getElementById('general-empty');
 
-            // 1. Strict Future Filter (Today is 2026-02-25 per system prompt)
-            const today = new Date('2026-02-25T00:00:00');
+            // 1. Strict Future Filter (Dynamic today)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset to start of day for accurate comparison
+
             const futureEvents = events.filter(e => {
+                if (!e.date) return true; // Show TBD events
                 const eventDate = new Date(e.date + 'T00:00:00');
-                return eventDate > today; // Only show events STRICTLY in the future (tomorrow or later)
+                if (isNaN(eventDate.getTime())) return true; // Show if unparseable
+                return eventDate >= today; // Show events for today and future
             });
 
             // 2. Sort by date chronological

@@ -112,6 +112,27 @@ async def run_discovery():
 
         # Save event if it passes filters
         save_event(event_data, handle, image_path, post_id)
+    
+    # 4. Export for GitHub Pages
+    export_to_json()
+
+def export_to_json():
+    print("📦 Exporting data for GitHub Pages...")
+    conn = sqlite3.connect('free_food.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    # Only export pending and approved events, sorted by date
+    events = cursor.execute('''
+        SELECT * FROM food_events 
+        WHERE status != "REJECTED" 
+        ORDER BY date ASC
+    ''').fetchall()
+    conn.close()
+    
+    data = [dict(ix) for ix in events]
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
+    print("✅ data.json updated.")
 
 if __name__ == "__main__":
     init_db()
