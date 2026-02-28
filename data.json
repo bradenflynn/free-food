@@ -214,5 +214,41 @@
         "image_path": "downloads/usd_asu_DU9qM4-jlnG.jpg",
         "status": "PENDING",
         "created_at": "2026-02-26 23:21:00"
+    },
+    {
+        "id": 18,
+        "source": "INSTAGRAM",
+        "source_handle": "usd.sfa",
+        "post_id": "DVPYuehkiG2",
+        "club_name": "Women in ETFs",
+        "event_name": "International Women's Day: Ring the Bell for Equality",
+        "date": "2026-03-12",
+        "time": "12:30 PM - 1:45 PM",
+        "location": "Nexus Theater",
+        "food_provided": "Lunch provided",
+        "has_free_food": 1,
+        "food_rank": 2,
+        "confidence_score": 9,
+        "image_path": "downloads/usd.sfa_DVPYuehkiG2.jpg",
+        "status": "PENDING",
+        "created_at": "2026-02-28 05:06:16"
+    },
+    {
+        "id": 19,
+        "source": "INSTAGRAM",
+        "source_handle": "usd_asu",
+        "post_id": "DVRNPR4ifVK",
+        "club_name": "USD African Student Union and Black Student Union",
+        "event_name": "Kickback",
+        "date": "2026-03-13",
+        "time": "6:00-9:00 PM",
+        "location": "UC-Tecolote Canyon Patio",
+        "food_provided": "",
+        "has_free_food": 0,
+        "food_rank": null,
+        "confidence_score": 1,
+        "image_path": "downloads/usd_asu_DVRNPR4ifVK.jpg",
+        "status": "PENDING",
+        "created_at": "2026-02-28 05:07:23"
     }
 ]
