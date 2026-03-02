@@ -6,10 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FFF Discovery | University of San Diego</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Space+Grotesk:wght@300;500;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --galaxy-bg: #020205;
+            --accent-pink: #e52e71;
+            --accent-orange: #ff8a00;
+            --accent-blue: #4f46e5;
+            --accent-cyan: #0ea5e9;
         }
 
         body {
@@ -18,6 +24,13 @@
             color: #fff;
             overflow-x: hidden;
             min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-space {
+            font-family: 'Space Grotesk', sans-serif;
         }
 
         /* Galaxy Background Animation */
@@ -32,32 +45,122 @@
             background: radial-gradient(circle at 50% 50%, #0a0a1a 0%, #020205 100%);
         }
 
+        #star-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.4;
+            filter: blur(2px);
+        }
+
+        .planet-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 30% 30%, #4f46e5, #000);
+            top: -50px;
+            right: -50px;
+            box-shadow: 0 0 60px rgba(79, 70, 229, 0.3);
+            animation: float-slow 20s infinite ease-in-out;
+        }
+
+        .planet-2 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #e52e71, #000);
+            bottom: 10%;
+            left: -30px;
+            box-shadow: 0 0 40px rgba(229, 46, 113, 0.2);
+            animation: float-slow 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float-slow {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
+        }
+
+        .comet {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #fff, 0 0 20px 4px rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .comet::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+            transform: translateY(-50%);
+        }
+
+        @keyframes comet-move {
+            0% {
+                transform: translate(100vw, -100vh) rotate(-45deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-100px, 100vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
         .blob {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(45deg, #e52e71, #ff8a00);
-            filter: blur(120px);
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(45deg, var(--accent-pink), var(--accent-orange));
+            filter: blur(140px);
             border-radius: 50%;
-            opacity: 0.15;
-            animation: move 25s infinite alternate;
+            opacity: 0.12;
+            animation: move-blobs 30s infinite alternate;
         }
 
         .blob-2 {
-            background: linear-gradient(45deg, #4f46e5, #0ea5e9);
-            animation-delay: -10s;
-            animation-duration: 30s;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-cyan));
+            animation-delay: -15s;
+            animation-duration: 35s;
             right: -100px;
             top: -100px;
         }
 
-        @keyframes move {
+        @keyframes move-blobs {
             from {
-                transform: translate(-10%, -10%) scale(1);
+                transform: translate(-15%, -15%) scale(1);
             }
 
             to {
-                transform: translate(20%, 20%) scale(1.2);
+                transform: translate(25%, 25%) scale(1.3);
             }
         }
 
@@ -159,6 +262,9 @@
 
 <body class="p-8 pb-32">
     <div class="galaxy-wrap">
+        <canvas id="star-canvas"></canvas>
+        <div class="planet planet-1"></div>
+        <div class="planet planet-2"></div>
         <div class="blob"></div>
         <div class="blob blob-2"></div>
     </div>
@@ -250,6 +356,52 @@
             if (isNaN(date.getTime())) return dateStr;
             return `${months[date.getMonth()]} ${date.getDate()}`;
         }
+
+        // --- Improved Calendar Time Parsing ---
+        function parseToIcsDateTime(dateStr, timeStr, type = 'start') {
+            const today = new Date();
+            const year = dateStr ? dateStr.split('-')[0] : today.getFullYear();
+            const cleanDate = dateStr ? dateStr.replace(/-/g, '') : today.toISOString().split('T')[0].replace(/-/g, '');
+
+            if (!timeStr || timeStr.toLowerCase().includes('tbd')) {
+                // If it's just a date, return YYYYMMDD (all day)
+                return { value: cleanDate, isAllDay: true };
+            }
+
+            // Extract times like "1-2 PM", "1:30 PM", "12 PM"
+            const timeMatch = timeStr.match(/(\d+)(?::(\d+))?\s*(AM|PM)?(?:\s*-\s*(\d+)(?::(\d+))?\s*(AM|PM)?)?/i);
+            if (!timeMatch) return { value: cleanDate, isAllDay: true };
+
+            let hours1 = parseInt(timeMatch[1]);
+            let mins1 = parseInt(timeMatch[2] || "0");
+            let ampm1 = (timeMatch[3] || "").toUpperCase();
+
+            let hours2 = parseInt(timeMatch[4]);
+            let mins2 = parseInt(timeMatch[5] || "0");
+            let ampm2 = (timeMatch[6] || "").toUpperCase();
+
+            // Handle AM/PM logic
+            if (!ampm1 && ampm2) ampm1 = ampm2; // "1-2 PM" case
+            if (ampm1 === 'PM' && hours1 < 12) hours1 += 12;
+            if (ampm1 === 'AM' && hours1 === 12) hours1 = 0;
+
+            if (hours2) {
+                if (ampm2 === 'PM' && hours2 < 12) hours2 += 12;
+                if (ampm2 === 'AM' && hours2 === 12) hours2 = 0;
+            } else {
+                // Default duration 1 hour if no end time
+                hours2 = hours1 + 1;
+                mins2 = mins1;
+            }
+
+            const targetHours = type === 'start' ? hours1 : hours2;
+            const targetMins = type === 'start' ? mins1 : mins2;
+
+            const h = targetHours.toString().padStart(2, '0');
+            const m = targetMins.toString().padStart(2, '0');
+            return { value: `${cleanDate}T${h}${m}00`, isAllDay: false };
+        }
+        // --------------------------------------
 
         // 3D Tilt Logic
         function handleTilt(e, card) {
@@ -373,13 +525,21 @@
             let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//FreeFoodFinder//USD//EN\r\nX-WR-CALNAME:Free Food\r\n";
 
             allFutureEvents.forEach(event => {
-                const dateStr = event.date.replace(/-/g, ''); // YYYYMMDD
+                const start = parseToIcsDateTime(event.date, event.time, 'start');
+                const end = parseToIcsDateTime(event.date, event.time, 'end');
                 const uid = `fff-${event.post_id}@bradenflynn.github.io`;
 
                 icsContent += "BEGIN:VEVENT\r\n";
                 icsContent += `UID:${uid}\r\n`;
                 icsContent += `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\n`;
-                icsContent += `DTSTART;VALUE=DATE:${dateStr}\r\n`;
+
+                if (start.isAllDay) {
+                    icsContent += `DTSTART;VALUE=DATE:${start.value}\r\n`;
+                } else {
+                    icsContent += `DTSTART:${start.value}\r\n`;
+                    icsContent += `DTEND:${end.value}\r\n`;
+                }
+
                 icsContent += `SUMMARY:🍕 ${event.club_name}: ${event.food_provided || 'Free Food'}\r\n`;
                 icsContent += `LOCATION:${event.location || 'USD Campus'}\r\n`;
                 icsContent += `DESCRIPTION:View Original Post: https://instagram.com/p/${event.post_id}/\\n\\nTime tracked: ${event.time || 'Check post for details'}\r\n`;
@@ -446,6 +606,59 @@
             fetchEvents();
         }
 
+        // --- Starfield & Comet Logic ---
+        function initBackground() {
+            const canvas = document.getElementById('star-canvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            const starCount = 400;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                stars = [];
+                for (let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 1.5,
+                        speed: Math.random() * 0.05 + 0.02,
+                        opacity: Math.random()
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(s => {
+                    s.y -= s.speed;
+                    if (s.y < 0) s.y = canvas.height;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            animate();
+
+            // Comet spawning
+            setInterval(() => {
+                const comet = document.createElement('div');
+                comet.className = 'comet';
+                // Random position
+                comet.style.top = Math.random() * 50 + '%';
+                comet.style.right = '-100px';
+                comet.style.animation = `comet-move ${Math.random() * 2 + 1}s linear forwards`;
+                document.querySelector('.galaxy-wrap').appendChild(comet);
+                setTimeout(() => comet.remove(), 3000);
+            }, 8000);
+        }
+
+        initBackground();
         fetchEvents();
     </script>
 </body>
