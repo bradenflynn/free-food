@@ -4,20 +4,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FFF Admin | Discovery Dashboard</title>
+    <title>FFF Discovery | University of San Diego</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --galaxy-bg: #020205;
+        }
+
         body {
             font-family: 'Outfit', sans-serif;
-            background: #050505;
+            background: var(--galaxy-bg);
             color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Galaxy Background Animation */
+        .galaxy-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #0a0a1a 0%, #020205 100%);
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, #e52e71, #ff8a00);
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: move 25s infinite alternate;
+        }
+
+        .blob-2 {
+            background: linear-gradient(45deg, #4f46e5, #0ea5e9);
+            animation-delay: -10s;
+            animation-duration: 30s;
+            right: -100px;
+            top: -100px;
+        }
+
+        @keyframes move {
+            from {
+                transform: translate(-10%, -10%) scale(1);
+            }
+
+            to {
+                transform: translate(20%, 20%) scale(1.2);
+            }
         }
 
         .glass {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         .gradient-text {
@@ -27,214 +75,370 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .card-hover:hover {
-            transform: translateY(-8px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        /* 3D Tilt Wrapper */
+        .tilt-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.1s ease-out;
+        }
+
+        .card-inner {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .section-header {
-            border-left: 4px solid #e52e71;
-            padding-left: 1rem;
-            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #e52e71, transparent);
+            border-radius: 2px;
+        }
+
+        /* Skeleton Shimmer */
+        .skeleton {
+            background: rgba(255, 255, 255, 0.05);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Entry Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-card {
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            opacity: 0;
+        }
+
+        /* Blur-up Image */
+        .blur-up {
+            filter: blur(20px);
+            transition: filter 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .blur-up.loaded {
+            filter: blur(0);
+        }
+
+        /* Magnetic Button Glow */
+        .magnetic-wrap {
+            display: inline-block;
+            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
     </style>
 </head>
 
-<body class="p-8 pb-24">
-    <div class="max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-16">
+<body class="p-8 pb-32">
+    <div class="galaxy-wrap">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-20 gap-8">
             <div>
-                <h1 class="text-5xl font-bold gradient-text tracking-tight">Free Food Discovery</h1>
-                <p class="text-gray-400 mt-2 text-lg">University of San Diego | Admin Control</p>
+                <h1 class="text-6xl md:text-7xl font-black gradient-text tracking-tighter mb-2">Free Food Hunter</h1>
+                <p class="text-gray-400 text-xl font-light">University of San Diego | Discovery Dashboard</p>
             </div>
-            <div class="flex gap-4">
-                <div class="glass px-6 py-3 rounded-2xl flex items-center gap-3">
-                    <span class="w-3 h-3 bg-pink-500 rounded-full animate-pulse"></span>
-                    <span id="pending-count" class="font-bold text-xl">0</span> <span class="text-gray-400">Total
-                        Finds</span>
+            <div class="flex flex-wrap gap-4">
+                <!-- Sync All Button -->
+                <button onclick="exportToCalendar()"
+                    class="glass px-8 py-4 rounded-[2.5rem] flex items-center gap-4 hover:bg-white/10 transition-all active:scale-95 group shadow-2xl">
+                    <span class="text-2xl group-hover:rotate-12 transition-transform">🗓️</span>
+                    <div class="flex flex-col items-start">
+                        <span class="font-black text-xs uppercase tracking-widest text-white">Sync All</span>
+                        <span class="text-[10px] text-gray-400 font-bold">To "Free Food" Calendar</span>
+                    </div>
+                </button>
+
+                <div class="glass px-8 py-4 rounded-[2.5rem] flex items-center gap-4">
+                    <span class="w-4 h-4 bg-pink-500 rounded-full animate-ping"></span>
+                    <div class="flex flex-col">
+                        <span id="pending-count" class="font-black text-2xl leading-none">0</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Total Finds</span>
+                    </div>
                 </div>
             </div>
         </header>
 
         <!-- Section 1: Confirmed Free Food -->
-        <section class="mb-20">
+        <section class="mb-24">
             <div class="section-header">
-                <h2 class="text-3xl font-bold text-white">Confirmed Free Food 🍕</h2>
-                <p class="text-gray-400">AI found explicit mentions of food in these posts.</p>
+                <h2 class="text-4xl font-black text-white italic tracking-tight">Confirmed Food 🍕</h2>
             </div>
-            <div id="confirmed-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Confirmed events injected here -->
+            <div id="confirmed-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- Skeletons loader -->
+                <div class="glass rounded-[3rem] h-[600px] skeleton"></div>
+                <div class="glass rounded-[3rem] h-[600px] skeleton"></div>
+                <div class="glass rounded-[3rem] h-[600px] skeleton"></div>
             </div>
-            <div id="confirmed-empty" class="hidden py-12 text-center glass rounded-3xl mt-4">
-                <p class="text-gray-500 text-lg italic">No confirmed food found in this batch.</p>
+            <div id="confirmed-empty" class="hidden py-16 text-center glass rounded-[3rem] mt-8">
+                <p class="text-gray-500 text-xl italic font-light">The hunt continues... No confirmed food yet.</p>
             </div>
         </section>
 
-        <!-- Section 2: Potential Food / General Events -->
+        <!-- Section 2: General Events -->
         <section>
             <div class="section-header">
-                <h2 class="text-3xl font-bold text-white">General Events 📅</h2>
-                <p class="text-gray-400">No explicit food mentioned, but worth a double-check.</p>
+                <h2 class="text-4xl font-black text-white italic tracking-tight">General Events 📅</h2>
             </div>
-            <div id="general-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- General events injected here -->
+            <div id="general-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             </div>
-            <div id="general-empty" class="hidden py-12 text-center glass rounded-3xl mt-4">
-                <p class="text-gray-500 text-lg italic">No other events discovered.</p>
+            <div id="general-empty" class="hidden py-16 text-center glass rounded-[3rem] mt-8">
+                <p class="text-gray-500 text-xl italic font-light">All quiet on the discovery front.</p>
             </div>
         </section>
     </div>
 
     <script>
         const API_BASE = 'http://localhost:5001';
+        let allFutureEvents = [];
 
         async function fetchEvents() {
             try {
-                console.log("Fetching events...");
                 let response;
                 try {
-                    // Try local API first
                     response = await fetch(`${API_BASE}/api/events`);
                     if (!response.ok) throw new Error();
                 } catch {
-                    console.log("Public Mode: Loading data.json");
-                    // Use a cache-buster for GitHub Pages
                     response = await fetch(`data.json?v=${Date.now()}`);
                 }
                 const events = await response.json();
-                console.log(`Loaded ${events.length} events.`);
-                renderEvents(events);
+
+                // Allow a small delay for premium feel
+                setTimeout(() => {
+                    renderEvents(events);
+                }, 500);
             } catch (err) {
-                console.error("Critical Error: Could not load events.", err);
-                const grids = ['confirmed-grid', 'general-grid'];
-                grids.forEach(id => {
-                    document.getElementById(id).innerHTML = `<div class="col-span-full py-12 text-center glass rounded-3xl"><p class="text-red-400">Error loading data.json. Make sure you pushed your changes!</p></div>`;
-                });
+                console.error("Failed to fetch events:", err);
             }
         }
 
         function formatDate(dateStr) {
             if (!dateStr || !dateStr.includes('-')) return dateStr;
-            const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
             const date = new Date(dateStr + 'T00:00:00');
             if (isNaN(date.getTime())) return dateStr;
-            const month = months[date.getMonth()];
-            const day = date.getDate();
-            return `${month}-${day}`;
+            return `${months[date.getMonth()]} ${date.getDate()}`;
         }
 
-        function createCard(event) {
+        // 3D Tilt Logic
+        function handleTilt(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const tiltX = (y - centerY) / 20;
+            const tiltY = (centerX - x) / 20;
+
+            card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+        }
+
+        function resetTilt(card) {
+            card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+        }
+
+        // Magnetic Logic
+        function handleMagnetic(e, btn) {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        }
+
+        function resetMagnetic(btn) {
+            btn.style.transform = `translate(0, 0)`;
+        }
+
+        // Count-up Animation
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function createCard(event, index) {
             const isConfirmed = event.has_free_food;
-            const rank = event.food_rank || 1;
-
-            let rankColor = "bg-blue-600/90";
-            let rankLabel = "Tier 1: Snacks";
-            let borderStyle = "border-white/10";
-            let glowStyle = "";
-
-            if (rank === 2) {
-                rankColor = "bg-emerald-600/90";
-                rankLabel = "Tier 2: Meal";
-            } else if (rank >= 3) {
-                rankColor = "bg-amber-500/90 text-black";
-                rankLabel = "Tier 3: Elite ✨";
-                borderStyle = "border-amber-500/30";
-                glowStyle = "shadow-[0_0_20px_rgba(245,158,11,0.2)]";
-            }
-
-            // Public vs Local Image Handling
             const imgUrl = event.image_path;
+            const delay = index * 0.1;
 
             return `
-                <div class="glass rounded-[2rem] overflow-hidden card-hover flex flex-col h-full bg-neutral-900/40 border ${borderStyle} ${glowStyle}">
-                    <div class="relative h-72 overflow-hidden group bg-neutral-950">
-                        <img src="${imgUrl}" onerror="this.src='${API_BASE}/${imgUrl}'; this.onerror=null;" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                <div class="tilt-card animate-card" style="animation-delay: ${delay}s" 
+                     onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                    <div class="glass rounded-[3rem] overflow-hidden card-inner flex flex-col h-full shadow-2xl">
+                        <div class="relative h-80 overflow-hidden group bg-neutral-950">
+                            <!-- Blur-up Image Implementation -->
+                            <img src="${imgUrl}" 
+                                 onload="this.classList.add('loaded')"
+                                 onerror="this.src='${API_BASE}/${imgUrl}'; this.onerror=null;" 
+                                 class="w-full h-full object-contain transition-transform duration-1000 group-hover:scale-110 blur-up">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/10"></div>
+                            
+                            <div class="absolute bottom-6 left-8">
+                                <span class="bg-white/10 backdrop-blur-xl text-[10px] uppercase tracking-[0.3em] font-black px-4 py-2 rounded-full border border-white/10 shadow-2xl">
+                                    @${event.source_handle}
+                                </span>
+                            </div>
+                        </div>
                         
-                        <div class="absolute top-4 left-4 flex gap-2">
-                             ${isConfirmed ? `
-                                <div class="${rankColor} backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">
-                                    ${rankLabel}
+                        <div class="p-10 flex flex-col flex-grow">
+                            <div class="mb-8">
+                                <h3 class="text-3xl font-black text-white tracking-tight leading-none mb-4">${event.club_name || 'Organization'}</h3>
+                                <p class="text-pink-500 font-bold text-lg uppercase tracking-tight">
+                                    ${event.food_provided || (isConfirmed ? 'Free Food Detected' : 'General Event')}
+                                </p>
+                            </div>
+                            
+                            <div class="space-y-5 text-gray-400 mb-10 mt-auto">
+                                <div class="flex items-center gap-4">
+                                    <span class="text-2xl">📍</span> 
+                                    <span class="font-medium text-white/80">${event.location || 'Location TBD'}</span>
                                 </div>
-                             ` : ''}
-                            <div class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold shadow-lg border border-white/10">
-                                AI Confidence: ${event.confidence_score * 10}%
+                                <div class="flex items-center gap-4">
+                                    <span class="text-2xl">🕒</span> 
+                                    <div>
+                                        <span class="font-black text-white text-xl">${formatDate(event.date)}</span>
+                                        <span class="opacity-50 font-bold ml-1">• ${event.time || 'TBD'}</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="absolute bottom-4 left-6">
-                            <span class="bg-black/60 backdrop-blur-md text-[10px] uppercase tracking-widest font-black px-3 py-1 rounded-md border border-white/20">
-                                @${event.source_handle}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="p-8 flex flex-col flex-grow">
-                        <div class="mb-6">
-                            <h3 class="text-2xl font-bold text-white leading-tight mb-2">${event.club_name || 'Organization'}</h3>
-                            <p class="${rank >= 3 ? 'text-amber-400' : (rank === 2 ? 'text-emerald-400' : 'text-blue-400')} font-bold text-lg">
-                                ${event.food_provided || (isConfirmed ? 'Free Food Detected' : 'General Club Event')}
-                            </p>
-                        </div>
-                        
-                        <div class="space-y-4 text-sm text-gray-400 mb-8 mt-auto">
-                            <div class="flex items-start gap-3">
-                                <span class="text-xl mt-0.5 opacity-80">📍</span> 
-                                <span class="leading-tight">${event.location || 'Location Not Specified'}</span>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="magnetic-wrap" onmousemove="handleMagnetic(event, this)" onmouseleave="resetMagnetic(this)">
+                                    <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" 
+                                       class="glass w-full block text-white font-black py-5 rounded-3xl hover:bg-white/10 transition-colors text-center text-xs uppercase tracking-widest flex items-center justify-center gap-2">
+                                        Instagram
+                                    </a>
+                                </div>
+                                <div class="magnetic-wrap" onmousemove="handleMagnetic(event, this)" onmouseleave="resetMagnetic(this)">
+                                    <button onclick="handleDismiss(${event.id})" 
+                                            class="bg-white w-full text-black font-black py-5 rounded-3xl hover:bg-neutral-200 transition-colors active:scale-95 text-xs uppercase tracking-widest shadow-xl">
+                                        Dismiss
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-xl opacity-80">🕒</span> 
-                                <span class="font-black text-white text-base">${formatDate(event.date)}</span>
-                                <span class="opacity-60 text-base">• ${event.time || 'TBD'}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="updateStatus(${event.id}, 'approve')" class="bg-white text-black font-black py-4 rounded-2xl hover:bg-neutral-200 transition-all active:scale-95 text-sm uppercase tracking-wider">Approve</button>
-                            <button onclick="updateStatus(${event.id}, 'reject')" class="bg-neutral-800 text-neutral-400 font-bold py-4 rounded-2xl hover:bg-neutral-700 hover:text-white transition-all active:scale-95 text-sm uppercase">Skip</button>
                         </div>
                     </div>
                 </div>
             `;
         }
 
+        async function exportToCalendar() {
+            if (allFutureEvents.length === 0) {
+                alert("No future events to sync!");
+                return;
+            }
+
+            let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//FreeFoodFinder//USD//EN\r\nX-WR-CALNAME:Free Food\r\n";
+
+            allFutureEvents.forEach(event => {
+                const dateStr = event.date.replace(/-/g, ''); // YYYYMMDD
+                const uid = `fff-${event.post_id}@bradenflynn.github.io`;
+
+                icsContent += "BEGIN:VEVENT\r\n";
+                icsContent += `UID:${uid}\r\n`;
+                icsContent += `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z\r\n`;
+                icsContent += `DTSTART;VALUE=DATE:${dateStr}\r\n`;
+                icsContent += `SUMMARY:🍕 ${event.club_name}: ${event.food_provided || 'Free Food'}\r\n`;
+                icsContent += `LOCATION:${event.location || 'USD Campus'}\r\n`;
+                icsContent += `DESCRIPTION:View Original Post: https://instagram.com/p/${event.post_id}/\\n\\nTime tracked: ${event.time || 'Check post for details'}\r\n`;
+                icsContent += "END:VEVENT\r\n";
+            });
+
+            icsContent += "END:VCALENDAR";
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'USD_Free_Food.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert("✓ USD_Free_Food.ics generated! Open this file to add all events to your 'Free Food' subcalendar.");
+        }
+
+        async function handleDismiss(id) {
+            if (confirm("Dismiss this event? It will be removed from your dashboard.")) {
+                await updateStatus(id, 'reject');
+            }
+        }
+
         function renderEvents(events) {
             const confirmedGrid = document.getElementById('confirmed-grid');
             const generalGrid = document.getElementById('general-grid');
             const totalCount = document.getElementById('pending-count');
-
             const confirmedEmpty = document.getElementById('confirmed-empty');
             const generalEmpty = document.getElementById('general-empty');
 
-            // 1. Strict Future Filter (Dynamic today)
             const today = new Date();
-            today.setHours(0, 0, 0, 0); // Reset to start of day for accurate comparison
+            today.setHours(0, 0, 0, 0);
 
-            const futureEvents = events.filter(e => {
-                if (!e.date) return true; // Show TBD events
+            allFutureEvents = events.filter(e => {
+                if (!e.date) return true;
                 const eventDate = new Date(e.date + 'T00:00:00');
-                if (isNaN(eventDate.getTime())) return true; // Show if unparseable
-                return eventDate >= today; // Show events for today and future
+                if (isNaN(eventDate.getTime())) return true;
+                return eventDate >= today;
             });
 
-            // 2. Sort by date chronological
-            futureEvents.sort((a, b) => {
+            allFutureEvents.sort((a, b) => {
                 if (!a.date) return 1;
                 if (!b.date) return -1;
                 return a.date.localeCompare(b.date);
             });
 
-            totalCount.innerText = futureEvents.length;
+            // Start count-up animation
+            animateValue('pending-count', 0, allFutureEvents.length, 1000);
 
-            const confirmedEvents = futureEvents.filter(e => e.has_free_food);
-            const generalEvents = futureEvents.filter(e => !e.has_free_food);
+            const confirmed = allFutureEvents.filter(e => e.has_free_food);
+            const general = allFutureEvents.filter(e => !e.has_free_food);
 
-            confirmedGrid.innerHTML = confirmedEvents.map(createCard).join('');
-            generalGrid.innerHTML = generalEvents.map(createCard).join('');
+            confirmedGrid.innerHTML = confirmed.map((e, i) => createCard(e, i)).join('');
+            generalGrid.innerHTML = general.map((e, i) => createCard(e, i + confirmed.length)).join('');
 
-            confirmedEvents.length === 0 ? confirmedEmpty.classList.remove('hidden') : confirmedEmpty.classList.add('hidden');
-            generalEvents.length === 0 ? generalEmpty.classList.remove('hidden') : generalEmpty.classList.add('hidden');
+            confirmed.length === 0 ? confirmedEmpty.classList.remove('hidden') : confirmedEmpty.classList.add('hidden');
+            general.length === 0 ? generalEmpty.classList.remove('hidden') : generalEmpty.classList.add('hidden');
         }
 
         async function updateStatus(id, action) {

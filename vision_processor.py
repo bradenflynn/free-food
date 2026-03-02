@@ -26,48 +26,26 @@ def process_image_for_food(image_path):
     base64_image = encode_image(image_path)
     
     prompt = f"""
-    CRITICAL MISSION: You are a "Free Food Hunter" for a university. 
-    Look at this image (Instagram post or story) and hunt for ANY signs of free food.
+    You are a helpful assistant assisting a university student in finding campus events with food.
+    Analyze the attached image and extract event details.
     
-    Look specifically for phrases like:
-    - "Lunch provided"
-    - "Free snacks"
-    - "Pizza included"
-    - "Catered by..."
-    - "Dinner is on us"
-    - "Light refreshments"
-    - "Food & Drinks"
-    
-    Extract the discovery into a JSON object:
-    - club_name: Name of the organization
-    - event_name: What is the event title?
-    - date: MUST BE IN YYYY-MM-DD FORMAT (Use 2026 for the year unless the poster explicitly says 2025)
-    - time: Time (e.g., 6:00 PM)
-    - location: Building/Room number or campus spot
-    - food_provided: EXACTLY what food is mentioned.
-    - has_free_food: Boolean (True ONLY if food is explicitly promised)
-    - has_time_and_location: Boolean (True ONLY if BOTH a specific time AND a specific location are mentioned in the post)
-    - is_future_event: Boolean (True ONLY if the event date is strictly AFTER {today_str}. If an event is on {today_str}, it is NOT in the future, so set this to FALSE). 
-    
-    CRITICAL YEAR RULE:
-    - If the poster says "2025", and today is "{today_str}", this event is ONE YEAR OLD and MUST be marked as is_future_event: false.
-    - If no year is mentioned, assume 2026 unless the month has already passed.
-    
-    FOOD RANKING TIERS (MUST BE 1, 2, or 3):
-    - Tier 1 (Snacks): Cookies, coffee, chips, candy, light refreshments, appetizers.
-    - Tier 2 (Meal): Pizza, sandwiches, pasta, bagels, tacos, burgers, skewers.
-    - Tier 3 (Elite): Chipotle, full catering, dinner buffet, multi-course meals, high-end restaurants.
-    - food_rank: Use the integer 1, 2, or 3 based on these tiers.
-    
-    - confidence_score: 1-10 (How sure are you that there is actually free food for attendees?)
+    FIELDS TO EXTRACT:
+    - club_name: Name of the organization (use "Unknown" if not found)
+    - event_name: Title of the event (use "Event" if not found)
+    - date: MUST BE IN YYYY-MM-DD FORMAT (Assume year is 2026 unless specified otherwise)
+    - time: e.g., 12:30 PM (use "TBD" if not found)
+    - location: e.g., UC Forums (use "TBD" if not found)
+    - food_provided: What food/refreshments are mentioned? (Leave empty if none)
+    - has_free_food: Boolean (True if the image mentions food, snacks, pizza, refreshments, etc.)
+    - has_time_and_location: Boolean (True if you found at least one specific building/room AND a time)
+    - is_current_or_future_event: Boolean (True if the event is on or AFTER {today_str}. Today is {today_str}. If the event is today, this is TRUE).
+    - food_rank: (1-3) 1=Snacks/Drinks, 2=Meal (Pizza/Sandwiches), 3=High-end/Full catering.
+    - confidence_score: (1-10) How sure are you?
 
-    Rules:
-    - If there is NO specific time AND NO specific location, set has_time_and_location to FALSE.
-    - If the event date is on OR before {today_str}, set is_future_event to FALSE.
-    - Any event from 2025 is a past event.
-    - If it's a "Food Drive" (where you GIVE food), has_free_food should be FALSE.
-    - If it's a "Bake Sale" (where you BUY food), has_free_food should be FALSE.
-    - Return ONLY the JSON.
+    If you are unsure about any detail, provide your best guess or "Unknown/TBC" rather than refusing the request. your goal is to help a student not miss free lunch. 
+    
+    If the image is just a logo or unrelated, set has_free_food to false and has_time_and_location to false.
+    Return ONLY the JSON.
     """
     
     try:

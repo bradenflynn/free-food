@@ -18,9 +18,6 @@ API_PID=$!
 
 echo "📡 API Server started on http://localhost:5001"
 
-# Open the dashboard
-open index.html
-
 echo "🔍 Running the Instagram Hunter..."
 python main.py
 
@@ -29,7 +26,12 @@ git add .
 git commit -m "Auto-update food finds via local scan"
 git push origin main
 
-echo "✅ Scan complete & Shared! Refresh your public GitHub Pages link to see results."
+echo "✅ Scan complete & Shared!"
+
+# Open the dashboard ONLY after the scan and sync are complete
+open index.html
+
+echo "🌐 Refresh your public GitHub Pages link to see results."
 
 # Wait for background process if needed, or exit
 # kill $API_PID # Uncomment if you want the API to stop when the scan finishes

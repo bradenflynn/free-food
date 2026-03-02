@@ -99,15 +99,14 @@ async def run_discovery():
             print(f"Skipping {image_path} due to error.")
             continue
 
-        # Strict Filtering:
-        # 1. Must have time AND location
+        # Relaxed Filtering:
+        # 1. Allow events even if missing time/location (just warn)
         if event_data.get('has_time_and_location') is False:
-            print(f"Skipping {handle} post {post_id}: Missing time or location.")
-            continue
+            print(f"⚠️ Warning: @{handle} post {post_id} is missing time or location, but saving anyway.")
             
-        # 2. Must be a future event (tomorrow or later)
-        if event_data.get('is_future_event') is False:
-            print(f"Skipping {handle} post {post_id}: Already passed or happening today.")
+        # 2. Must be a current or future event (Today + Future)
+        if event_data.get('is_current_or_future_event') is False:
+            print(f"Skipping {handle} post {post_id}: Event has already passed.")
             continue
 
         # Save event if it passes filters
