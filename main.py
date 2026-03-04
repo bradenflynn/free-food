@@ -131,7 +131,12 @@ def export_to_json():
     data = [dict(ix) for ix in events]
     with open('data.json', 'w') as f:
         json.dump(data, f, indent=4)
-    print("✅ data.json updated.")
+    
+    # Also export as data.js to bypass CORS for local file viewing
+    with open('data.js', 'w') as f:
+        f.write(f"window.FREE_FOOD_DATA = {json.dumps(data, indent=4)};")
+    
+    print("✅ data.json and data.js updated.")
 
 if __name__ == "__main__":
     init_db()

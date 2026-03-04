@@ -4,227 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FFF Discovery | University of San Diego</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Space+Grotesk:wght@300;500;700&display=swap"
+    <title>THE FREE LUNCH | USD PREMIER AGGREGATION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;700;900&display=swap"
         rel="stylesheet">
+    <script src="data.js"></script>
     <style>
         :root {
-            --galaxy-bg: #020205;
-            --accent-pink: #e52e71;
-            --accent-orange: #ff8a00;
-            --accent-blue: #4f46e5;
-            --accent-cyan: #0ea5e9;
+            --color-black: #000000;
+            --color-white: #ffffff;
+            --color-tan: #C19A6B;
+            --font-header: 'Bebas Neue', cursive;
+            --font-body: 'Inter', sans-serif;
+            --border-width: 3px;
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--galaxy-bg);
-            color: #fff;
+            font-family: var(--font-body);
+            background: var(--color-white);
+            color: var(--color-black);
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
         h1,
         h2,
-        h3,
-        .font-space {
-            font-family: 'Space Grotesk', sans-serif;
+        h3 {
+            font-family: var(--font-header);
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 0.9;
         }
 
-        /* Galaxy Background Animation */
-        .galaxy-wrap {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, #0a0a1a 0%, #020205 100%);
+        .checkerboard {
+            height: 24px;
+            background-image:
+                linear-gradient(45deg, #000 25%, transparent 25%),
+                linear-gradient(-45deg, #000 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #000 75%),
+                linear-gradient(-45deg, transparent 75%, #000 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border-top: var(--border-width) solid var(--color-black);
+            border-bottom: var(--border-width) solid var(--color-black);
         }
 
-        #star-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .tan-section {
+            background-color: var(--color-tan);
+            border-bottom: var(--border-width) solid var(--color-black);
+            padding: 4rem 2rem;
         }
 
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.4;
-            filter: blur(2px);
+        .header-main {
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .planet-1 {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle at 30% 30%, #4f46e5, #000);
-            top: -50px;
-            right: -50px;
-            box-shadow: 0 0 60px rgba(79, 70, 229, 0.3);
-            animation: float-slow 20s infinite ease-in-out;
+        .btn-oval {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            border: var(--border-width) solid var(--color-black);
+            border-radius: 9999px;
+            font-family: var(--font-header);
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: var(--color-black);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
         }
 
-        .planet-2 {
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle at 30% 30%, #e52e71, #000);
-            bottom: 10%;
-            left: -30px;
-            box-shadow: 0 0 40px rgba(229, 46, 113, 0.2);
-            animation: float-slow 15s infinite ease-in-out reverse;
+        .btn-oval:hover {
+            background: var(--color-black);
+            color: var(--color-white);
         }
 
-        @keyframes float-slow {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-30px) rotate(5deg);
-            }
+        .btn-oval.active {
+            background: var(--color-black);
+            color: var(--color-white);
         }
 
-        .comet {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 10px 2px #fff, 0 0 20px 4px rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            pointer-events: none;
+        .card {
+            border: var(--border-width) solid var(--color-black);
+            background: var(--color-white);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
         }
 
-        .comet::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: 0;
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
-            transform: translateY(-50%);
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 12px 12px 0px var(--color-black);
         }
 
-        @keyframes comet-move {
-            0% {
-                transform: translate(100vw, -100vh) rotate(-45deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translate(-100px, 100vh) rotate(-45deg);
-                opacity: 0;
-            }
+        .card {
+            animation: fadeInUp 0.6s ease backwards;
         }
 
-        .blob {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: linear-gradient(45deg, var(--accent-pink), var(--accent-orange));
-            filter: blur(140px);
-            border-radius: 50%;
-            opacity: 0.12;
-            animation: move-blobs 30s infinite alternate;
-        }
-
-        .blob-2 {
-            background: linear-gradient(45deg, var(--accent-blue), var(--accent-cyan));
-            animation-delay: -15s;
-            animation-duration: 35s;
-            right: -100px;
-            top: -100px;
-        }
-
-        @keyframes move-blobs {
-            from {
-                transform: translate(-15%, -15%) scale(1);
-            }
-
-            to {
-                transform: translate(25%, 25%) scale(1.3);
-            }
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        .gradient-text {
-            background: linear-gradient(45deg, #ff8a00, #e52e71);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* 3D Tilt Wrapper */
-        .tilt-card {
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            transition: transform 0.1s ease-out;
-        }
-
-        .card-inner {
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .section-header {
-            position: relative;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .section-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #e52e71, transparent);
-            border-radius: 2px;
-        }
-
-        /* Skeleton Shimmer */
-        .skeleton {
-            background: rgba(255, 255, 255, 0.05);
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        /* Entry Animation */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -237,93 +118,293 @@
             }
         }
 
-        .animate-card {
-            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-            opacity: 0;
+        .card-img-wrap {
+            position: relative;
+            height: 350px;
+            border-bottom: var(--border-width) solid var(--color-black);
+            background: #eee;
+            overflow: hidden;
         }
 
-        /* Blur-up Image */
-        .blur-up {
-            filter: blur(20px);
-            transition: filter 1s cubic-bezier(0.23, 1, 0.32, 1);
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
-        .blur-up.loaded {
-            filter: blur(0);
+        .sticker {
+            position: absolute;
+            background: var(--color-white);
+            border: 2px solid var(--color-black);
+            padding: 0.5rem 1rem;
+            font-family: var(--font-header);
+            font-size: 1.2rem;
+            border-radius: 9999px;
+            box-shadow: 4px 4px 0px var(--color-black);
+            z-index: 10;
         }
 
-        /* Magnetic Button Glow */
-        .magnetic-wrap {
-            display: inline-block;
-            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+        .sticker-top-left {
+            top: 1rem;
+            left: 1rem;
+        }
+
+        .sticker-bottom-right {
+            bottom: 1rem;
+            right: 1rem;
+        }
+
+        .card-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-header-area {
+            min-height: 120px;
+            /* Aligns the Target/Window section */
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-detail {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 3rem;
+            padding: 4rem 2rem;
+        }
+
+        .section-label {
+            font-family: var(--font-header);
+            font-size: 6rem;
+            padding: 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .section-label {
+                font-size: 4rem;
+            }
+
+            h1 {
+                font-size: 5rem !important;
+            }
+        }
+
+        .empty-brand-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border: var(--border-width) solid var(--color-black);
+            margin-bottom: 2rem;
+            filter: grayscale(1) contrast(1.1);
+        }
+
+        /* Scroll Progress - Side Bar */
+        #scroll-progress-wrap {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 200px;
+            border: 2px solid #000;
+            background: #fff;
+            z-index: 10001;
+        }
+
+        #scroll-progress-bar {
+            width: 100%;
+            height: 0%;
+            background: var(--color-tan);
+            transition: height 0.1s ease;
+        }
+
+        .header-main h1 {
+            font-size: 10rem;
+            letter-spacing: -0.01em;
+            margin: 0;
+            font-weight: 900;
+            line-height: .8;
+        }
+
+        /* Flowchart Styles */
+        .flowchart {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .flow-step {
+            border: 3px solid #000;
+            padding: 1.5rem;
+            background: #fff;
+            position: relative;
+            box-shadow: 6px 6px 0px #000;
+        }
+
+        .flow-step h4 {
+            font-family: var(--font-header);
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .flow-step p {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .flow-arrow {
+            position: absolute;
+            right: -1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            z-index: 5;
+        }
+
+        .card-header-area {
+            min-height: 160px;
+            /* Forced alignment for symmetry */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 2.5rem;
+            line-height: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-detail-group {
+            min-height: 140px;
+            /* Alignment for the tan bar */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 0.5rem;
         }
     </style>
 </head>
 
-<body class="p-8 pb-32">
-    <div class="galaxy-wrap">
-        <canvas id="star-canvas"></canvas>
-        <div class="planet planet-1"></div>
-        <div class="planet planet-2"></div>
-        <div class="blob"></div>
-        <div class="blob blob-2"></div>
+<body class="p-0">
+    <div id="scroll-progress-wrap">
+        <div id="scroll-progress-bar"></div>
     </div>
-
-    <div class="max-w-7xl mx-auto relative z-10">
-        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-20 gap-8">
-            <div>
-                <h1 class="text-6xl md:text-7xl font-black gradient-text tracking-tighter mb-2">Free Food Hunter</h1>
-                <p class="text-gray-400 text-xl font-light">University of San Diego | Discovery Dashboard</p>
+    <header class="header-main">
+        <div
+            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
+            <h1>THE FREE LUNCH</h1>
+            <div style="text-align: right;">
+                <p style="font-family: var(--font-header); font-size: 2rem; margin: 0;">USD PREMIER AGGREGATION</p>
+                <p style="font-weight: 900; margin: 0;">EST. 2026 | VERSION 2.0</p>
             </div>
-            <div class="flex flex-wrap gap-4">
-                <!-- Sync All Button -->
-                <button onclick="exportToCalendar()"
-                    class="glass px-8 py-4 rounded-[2.5rem] flex items-center gap-4 hover:bg-white/10 transition-all active:scale-95 group shadow-2xl">
-                    <span class="text-2xl group-hover:rotate-12 transition-transform">🗓️</span>
-                    <div class="flex flex-col items-start">
-                        <span class="font-black text-xs uppercase tracking-widest text-white">Sync All</span>
-                        <span class="text-[10px] text-gray-400 font-bold">To "Free Food" Calendar</span>
-                    </div>
-                </button>
+        </div>
 
-                <div class="glass px-8 py-4 rounded-[2.5rem] flex items-center gap-4">
-                    <span class="w-4 h-4 bg-pink-500 rounded-full animate-ping"></span>
-                    <div class="flex flex-col">
-                        <span id="pending-count" class="font-black text-2xl leading-none">0</span>
-                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Total Finds</span>
-                    </div>
+        <div style="display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap;">
+            <button onclick="exportToCalendar()" class="btn-oval">COMMIT TO CALENDAR</button>
+            <div class="btn-oval active">
+                <span id="pending-count">0</span>&nbsp;ITEMS DISCOVERED
+            </div>
+        </div>
+    </header>
+
+    <div class="checkerboard"></div>
+
+    <section class="tan-section">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div class="flowchart">
+                <div class="flow-step">
+                    <h4>1. SCAN</h4>
+                    <p>AI monitors 100+ USD student org accounts.</p>
+                    <div class="flow-arrow">⮕</div>
+                </div>
+                <div class="flow-step">
+                    <h4>2. DETECT</h4>
+                    <p>Real-time identification of all free food flyers.</p>
+                    <div class="flow-arrow">⮕</div>
+                </div>
+                <div class="flow-step">
+                    <h4>3. VERIFY</h4>
+                    <p>We confirm the precise locations and times.</p>
+                    <div class="flow-arrow">⮕</div>
+                </div>
+                <div class="flow-step" style="background: #000; color: #fff;">
+                    <h4>4. EAT</h4>
+                    <p>You score the haul before it disappears.</p>
                 </div>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- Section 1: Confirmed Free Food -->
-        <section class="mb-24">
-            <div class="section-header">
-                <h2 class="text-4xl font-black text-white italic tracking-tight">Confirmed Food 🍕</h2>
-            </div>
-            <div id="confirmed-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                <!-- Skeletons loader -->
-                <div class="glass rounded-[3rem] h-[600px] skeleton"></div>
-                <div class="glass rounded-[3rem] h-[600px] skeleton"></div>
-                <div class="glass rounded-[3rem] h-[600px] skeleton"></div>
-            </div>
-            <div id="confirmed-empty" class="hidden py-16 text-center glass rounded-[3rem] mt-8">
-                <p class="text-gray-500 text-xl italic font-light">The hunt continues... No confirmed food yet.</p>
-            </div>
-        </section>
+    <div class="checkerboard"></div>
 
-        <!-- Section 2: General Events -->
-        <section>
-            <div class="section-header">
-                <h2 class="text-4xl font-black text-white italic tracking-tight">General Events 📅</h2>
-            </div>
-            <div id="general-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            </div>
-            <div id="general-empty" class="hidden py-16 text-center glass rounded-[3rem] mt-8">
-                <p class="text-gray-500 text-xl italic font-light">All quiet on the discovery front.</p>
-            </div>
-        </section>
+    <h2 class="section-label">FREE FOOD CONFIRMED</h2>
+    <div id="confirmed-grid" class="grid-container">
+        <!-- Haul items injected here -->
     </div>
+    <div id="confirmed-empty" class="hidden text-center py-20" style="padding: 4rem 2rem;">
+        <img src="brand/pizza.png" class="empty-brand-img"
+            style="max-width: 600px; margin: 0 auto 2rem auto; display: block;">
+        <h3 style="font-size: 3rem; color: #999;">THE HAUL IS EMPTY. PATIENCE IS A VIRTUE.</h3>
+    </div>
+
+    <div class="checkerboard"></div>
+
+    <h2 class="section-label">OTHER EVENTS</h2>
+    <div id="general-grid" class="grid-container">
+        <!-- Radar items injected here -->
+    </div>
+    <div id="general-empty" class="hidden text-center py-20" style="padding: 4rem 2rem;">
+        <img src="brand/boba.png" class="empty-brand-img"
+            style="max-width: 600px; margin: 0 auto 2rem auto; display: block;">
+        <h3 style="font-size: 3rem; color: #999;">ALL QUIET ON THE RADAR.</h3>
+    </div>
+
+    <footer class="tan-section" style="margin-top: 4rem; padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;">
+            <h2 style="font-size: 4rem;">THE FREE LUNCH</h2>
+            <div style="text-align: right; font-weight: 900;">
+                <p>CONTACT: INFO@FREEFOODFINDER.USD</p>
+                <p>EST. 2026</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         const API_BASE = 'http://localhost:5001';
@@ -331,19 +412,27 @@
 
         async function fetchEvents() {
             try {
-                let response;
+                let events = [];
+                // 1. Try Live API
                 try {
-                    response = await fetch(`${API_BASE}/api/events`);
-                    if (!response.ok) throw new Error();
-                } catch {
-                    response = await fetch(`data.json?v=${Date.now()}`);
-                }
-                const events = await response.json();
+                    const response = await fetch(`${API_BASE}/api/events`);
+                    if (response.ok) events = await response.json();
+                } catch (e) { console.log("API offline, trying data sources..."); }
 
-                // Allow a small delay for premium feel
-                setTimeout(() => {
-                    renderEvents(events);
-                }, 500);
+                // 2. Try Local Fallbacks if API failed
+                if (events.length === 0) {
+                    if (window.FREE_FOOD_DATA) {
+                        events = window.FREE_FOOD_DATA;
+                        console.log("Loaded from data.js bridge");
+                    } else {
+                        try {
+                            const response = await fetch(`data.json?v=${Date.now()}`);
+                            if (response.ok) events = await response.json();
+                        } catch (e) { console.log("data.json blocked by CORS"); }
+                    }
+                }
+
+                renderEvents(events);
             } catch (err) {
                 console.error("Failed to fetch events:", err);
             }
@@ -357,18 +446,14 @@
             return `${months[date.getMonth()]} ${date.getDate()}`;
         }
 
-        // --- Improved Calendar Time Parsing ---
         function parseToIcsDateTime(dateStr, timeStr, type = 'start') {
             const today = new Date();
-            const year = dateStr ? dateStr.split('-')[0] : today.getFullYear();
             const cleanDate = dateStr ? dateStr.replace(/-/g, '') : today.toISOString().split('T')[0].replace(/-/g, '');
 
             if (!timeStr || timeStr.toLowerCase().includes('tbd')) {
-                // If it's just a date, return YYYYMMDD (all day)
                 return { value: cleanDate, isAllDay: true };
             }
 
-            // Extract times like "1-2 PM", "1:30 PM", "12 PM"
             const timeMatch = timeStr.match(/(\d+)(?::(\d+))?\s*(AM|PM)?(?:\s*-\s*(\d+)(?::(\d+))?\s*(AM|PM)?)?/i);
             if (!timeMatch) return { value: cleanDate, isAllDay: true };
 
@@ -380,8 +465,7 @@
             let mins2 = parseInt(timeMatch[5] || "0");
             let ampm2 = (timeMatch[6] || "").toUpperCase();
 
-            // Handle AM/PM logic
-            if (!ampm1 && ampm2) ampm1 = ampm2; // "1-2 PM" case
+            if (!ampm1 && ampm2) ampm1 = ampm2;
             if (ampm1 === 'PM' && hours1 < 12) hours1 += 12;
             if (ampm1 === 'AM' && hours1 === 12) hours1 = 0;
 
@@ -389,7 +473,6 @@
                 if (ampm2 === 'PM' && hours2 < 12) hours2 += 12;
                 if (ampm2 === 'AM' && hours2 === 12) hours2 = 0;
             } else {
-                // Default duration 1 hour if no end time
                 hours2 = hours1 + 1;
                 mins2 = mins1;
             }
@@ -401,118 +484,40 @@
             const m = targetMins.toString().padStart(2, '0');
             return { value: `${cleanDate}T${h}${m}00`, isAllDay: false };
         }
-        // --------------------------------------
-
-        // 3D Tilt Logic
-        function handleTilt(e, card) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            const tiltX = (y - centerY) / 20;
-            const tiltY = (centerX - x) / 20;
-
-            card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-        }
-
-        function resetTilt(card) {
-            card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
-        }
-
-        // Magnetic Logic
-        function handleMagnetic(e, btn) {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-
-            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-        }
-
-        function resetMagnetic(btn) {
-            btn.style.transform = `translate(0, 0)`;
-        }
-
-        // Count-up Animation
-        function animateValue(id, start, end, duration) {
-            const obj = document.getElementById(id);
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
 
         function createCard(event, index) {
             const isConfirmed = event.has_free_food;
             const imgUrl = event.image_path;
-            const delay = index * 0.1;
+            const dateDisplay = formatDate(event.date);
 
             return `
-                <div class="tilt-card animate-card" style="animation-delay: ${delay}s" 
-                     onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
-                    <div class="glass rounded-[3rem] overflow-hidden card-inner flex flex-col h-full shadow-2xl">
-                        <div class="relative h-80 overflow-hidden group bg-neutral-950">
-                            <!-- Blur-up Image Implementation -->
-                            <img src="${imgUrl}" 
-                                 onload="this.classList.add('loaded')"
-                                 onerror="this.src='${API_BASE}/${imgUrl}'; this.onerror=null;" 
-                                 class="w-full h-full object-contain transition-transform duration-1000 group-hover:scale-110 blur-up">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/10"></div>
-                            
-                            <div class="absolute bottom-6 left-8">
-                                <span class="bg-white/10 backdrop-blur-xl text-[10px] uppercase tracking-[0.3em] font-black px-4 py-2 rounded-full border border-white/10 shadow-2xl">
-                                    @${event.source_handle}
-                                </span>
+                <article class="card" style="animation-delay: ${index * 0.1}s">
+                    <div class="card-img-wrap">
+                        <span class="sticker sticker-top-left">@${event.source_handle}</span>
+                        <img src="${imgUrl}" 
+                             onerror="this.src='${API_BASE}/${imgUrl}'; this.onerror=null;" 
+                             class="card-img">
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="card-header-area">
+                            <h3 class="card-title">${event.club_name || 'STUDENT ORG'}</h3>
+                            <div class="card-detail">📍 ${event.location || 'USD CAMPUS'}</div>
+                        </div>
+                        
+                        <div class="card-detail-group">
+                            <div class="card-detail">🕒 ${dateDisplay} | ${event.time || 'TBD'}</div>
+                            <div class="card-detail" style="background: var(--color-tan); padding: 0.5rem; border: 2px solid #000; font-family: var(--font-header); font-size: 1.3rem; min-height: 2.5rem; align-items: center;">
+                                🍕 ${event.food_provided || 'FOOD DETAILS PENDING'}
                             </div>
                         </div>
                         
-                        <div class="p-10 flex flex-col flex-grow">
-                            <div class="mb-8">
-                                <h3 class="text-3xl font-black text-white tracking-tight leading-none mb-4">${event.club_name || 'Organization'}</h3>
-                                <p class="text-pink-500 font-bold text-lg uppercase tracking-tight">
-                                    ${event.food_provided || (isConfirmed ? 'Free Food Detected' : 'General Event')}
-                                </p>
-                            </div>
-                            
-                            <div class="space-y-5 text-gray-400 mb-10 mt-auto">
-                                <div class="flex items-center gap-4">
-                                    <span class="text-2xl">📍</span> 
-                                    <span class="font-medium text-white/80">${event.location || 'Location TBD'}</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <span class="text-2xl">🕒</span> 
-                                    <div>
-                                        <span class="font-black text-white text-xl">${formatDate(event.date)}</span>
-                                        <span class="opacity-50 font-bold ml-1">• ${event.time || 'TBD'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="magnetic-wrap" onmousemove="handleMagnetic(event, this)" onmouseleave="resetMagnetic(this)">
-                                    <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" 
-                                       class="glass w-full block text-white font-black py-5 rounded-3xl hover:bg-white/10 transition-colors text-center text-xs uppercase tracking-widest flex items-center justify-center gap-2">
-                                        Instagram
-                                    </a>
-                                </div>
-                                <div class="magnetic-wrap" onmousemove="handleMagnetic(event, this)" onmouseleave="resetMagnetic(this)">
-                                    <button onclick="handleDismiss(${event.id})" 
-                                            class="bg-white w-full text-black font-black py-5 rounded-3xl hover:bg-neutral-200 transition-colors active:scale-95 text-xs uppercase tracking-widest shadow-xl">
-                                        Dismiss
-                                    </button>
-                                </div>
-                            </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
+                            <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem;">VIEW SOURCE</a>
+                            <button onclick="handleDismiss(${event.id})" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem;">FORGET IT</button>
                         </div>
                     </div>
-                </div>
+                </article>
             `;
         }
 
@@ -555,20 +560,19 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            alert("✓ USD_Free_Food.ics generated! Open this file to add all events to your 'Free Food' subcalendar.");
+            alert("✓ USD_Free_Food.ics generated!");
         }
 
         async function handleDismiss(id) {
-            if (confirm("Dismiss this event? It will be removed from your dashboard.")) {
-                await updateStatus(id, 'reject');
+            if (confirm("FORGET THIS EVENT?")) {
+                await fetch(`${API_BASE}/api/events/${id}/reject`, { method: 'POST' });
+                fetchEvents();
             }
         }
 
         function renderEvents(events) {
             const confirmedGrid = document.getElementById('confirmed-grid');
             const generalGrid = document.getElementById('general-grid');
-            const totalCount = document.getElementById('pending-count');
             const confirmedEmpty = document.getElementById('confirmed-empty');
             const generalEmpty = document.getElementById('general-empty');
 
@@ -588,8 +592,7 @@
                 return a.date.localeCompare(b.date);
             });
 
-            // Start count-up animation
-            animateValue('pending-count', 0, allFutureEvents.length, 1000);
+            document.getElementById('pending-count').innerHTML = allFutureEvents.length;
 
             const confirmed = allFutureEvents.filter(e => e.has_free_food);
             const general = allFutureEvents.filter(e => !e.has_free_food);
@@ -601,65 +604,37 @@
             general.length === 0 ? generalEmpty.classList.remove('hidden') : generalEmpty.classList.add('hidden');
         }
 
-        async function updateStatus(id, action) {
-            await fetch(`${API_BASE}/api/events/${id}/${action}`, { method: 'POST' });
-            fetchEvents();
-        }
-
-        // --- Starfield & Comet Logic ---
-        function initBackground() {
-            const canvas = document.getElementById('star-canvas');
-            const ctx = canvas.getContext('2d');
-            let stars = [];
-            const starCount = 400;
-
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                stars = [];
-                for (let i = 0; i < starCount; i++) {
-                    stars.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        size: Math.random() * 1.5,
-                        speed: Math.random() * 0.05 + 0.02,
-                        opacity: Math.random()
-                    });
-                }
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                stars.forEach(s => {
-                    s.y -= s.speed;
-                    if (s.y < 0) s.y = canvas.height;
-                    ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-                requestAnimationFrame(animate);
-            }
-
-            window.addEventListener('resize', resize);
-            resize();
-            animate();
-
-            // Comet spawning
-            setInterval(() => {
-                const comet = document.createElement('div');
-                comet.className = 'comet';
-                // Random position
-                comet.style.top = Math.random() * 50 + '%';
-                comet.style.right = '-100px';
-                comet.style.animation = `comet-move ${Math.random() * 2 + 1}s linear forwards`;
-                document.querySelector('.galaxy-wrap').appendChild(comet);
-                setTimeout(() => comet.remove(), 3000);
-            }, 8000);
-        }
-
-        initBackground();
         fetchEvents();
+
+        // Click Particles
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = e.clientX + 'px';
+                p.style.top = e.clientY + 'px';
+
+                // Symmetrical Spread
+                const angle = (i / 8) * Math.PI * 2;
+                const dist = 100 + Math.random() * 50;
+                p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        });
+
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement,
+                b = document.body,
+                st = 'scrollTop',
+                sh = 'scrollHeight';
+            const percent = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+            const bar = document.getElementById('scroll-progress-bar');
+            if (bar) bar.style.height = percent + '%';
+        });
     </script>
 </body>
 
