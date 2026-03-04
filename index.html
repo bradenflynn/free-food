@@ -362,32 +362,42 @@
         }
 
         .card-header-area {
-            min-height: 100px;
-            /* Forced alignment for symmetry */
+            height: 80px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            gap: 0.2rem;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
         }
 
         .card-title {
-            font-size: 2.2rem;
-            line-height: 1;
+            font-size: 2rem;
+            line-height: 1.1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            margin-bottom: 0.2rem;
+            height: 4.4rem;
+            /* Exactly 2 lines */
+        }
+
+        .card-location-row {
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
         }
 
         .card-detail-group {
-            min-height: 80px;
-            /* Alignment for the tan bar */
+            height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            gap: 0.2rem;
+            gap: 0.3rem;
         }
     </style>
 </head>
@@ -410,7 +420,7 @@
         </div>
 
         <div style="display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap;">
-            <button onclick="exportToCalendar()" class="btn-oval">COMMIT TO CALENDAR</button>
+            <button onclick="exportToCalendar()" class="btn-oval">SYNC</button>
             <div class="btn-oval active">
                 <span id="pending-count">0</span>&nbsp;ITEMS DISCOVERED
             </div>
@@ -570,7 +580,9 @@
                     <div class="card-content">
                         <div class="card-header-area">
                             <h3 class="card-title">${event.club_name || 'STUDENT ORG'}</h3>
-                            <div class="card-detail">📍 ${event.location || 'USD CAMPUS'}</div>
+                        </div>
+                        <div class="card-location-row">
+                            📍 ${event.location || 'USD CAMPUS'}
                         </div>
                         
                         <div class="card-detail-group">
