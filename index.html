@@ -423,11 +423,7 @@
             <button onclick="exportToCalendar()" class="btn-oval" style="font-size: 1.2rem;">SYNC TO GOOGLE
                 CALENDAR</button>
             <div class="btn-oval active" style="font-size: 1.2rem;">
-                <span id="confirmed-count">0</span>&nbsp;FOOD FLIERS FOUND
-            </div>
-            <div
-                style="font-family: var(--font-header); font-size: 1.2rem; display: flex; align-items: center; opacity: 0.5;">
-                [<span id="pending-count">0</span>&nbsp;TOTAL EVENTS ON RADAR]
+                <span id="events-count">0</span>&nbsp;EVENTS FOUND
             </div>
         </div>
     </header>
@@ -680,8 +676,7 @@
             const confirmed = allFutureEvents.filter(e => e.has_free_food);
             const general = allFutureEvents.filter(e => !e.has_free_food);
 
-            document.getElementById('confirmed-count').innerHTML = confirmed.length;
-            document.getElementById('pending-count').innerHTML = allFutureEvents.length;
+            animateCount('events-count', allFutureEvents.length);
 
             confirmedGrid.innerHTML = confirmed.map((e, i) => createCard(e, i)).join('');
             generalGrid.innerHTML = general.map((e, i) => createCard(e, i + confirmed.length)).join('');
@@ -691,6 +686,23 @@
 
             // Initialize Reval Observer after rendering
             initReveal();
+        }
+
+        function animateCount(id, Target) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            let current = 0;
+            const duration = 1500;
+            const stepTime = Math.abs(Math.floor(duration / Target));
+            if (Target === 0) {
+                el.innerText = "0";
+                return;
+            }
+            const timer = setInterval(() => {
+                current += 1;
+                el.innerText = current;
+                if (current >= Target) clearInterval(timer);
+            }, stepTime);
         }
 
         function initReveal() {
