@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE FREE LUNCH | USD PREMIER AGGREGATION</title>
+    <title>THE FREE LUNCH | USD</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;700;900&display=swap"
         rel="stylesheet">
     <script src="data.js"></script>
@@ -256,29 +256,9 @@
                 font-size: 1.3rem;
             }
 
-            /* Mobile Flowchart */
-            .flowchart {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .flow-step {
-                padding: 2rem 1.5rem;
-            }
-
-            .flow-arrow {
-                right: auto;
-                bottom: -1.8rem;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 2rem;
-            }
-
-            /* Scroll Progress for Mobile */
-            #scroll-progress-wrap {
-                right: 10px;
-                width: 8px;
-                height: 150px;
+            /* Mobile Flowchart - HIDE */
+            .tan-section:has(.flowchart) {
+                display: none;
             }
         }
 
@@ -407,7 +387,7 @@
             style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
             <h1>THE FREE LUNCH</h1>
             <div style="text-align: right;">
-                <p style="font-family: var(--font-header); font-size: 2rem; margin: 0;">USD PREMIER AGGREGATION</p>
+                <p style="font-family: var(--font-header); font-size: 2rem; margin: 0;">USD</p>
                 <p style="font-weight: 900; margin: 0;">EST. 2026 | VERSION 2.0</p>
                 <p
                     style="font-weight: 900; margin: 0; opacity: 0.3; font-size: 0.7rem; letter-spacing: 0.2rem; margin-top: 0.5rem;">
@@ -435,17 +415,17 @@
                 </div>
                 <div class="flow-step">
                     <h4>2. DETECT</h4>
-                    <p>Real-time identification of all free food flyers.</p>
+                    <p>Real-time identification of free food.</p>
                     <div class="flow-arrow"></div>
                 </div>
                 <div class="flow-step">
                     <h4>3. VERIFY</h4>
-                    <p>We confirm the precise locations and times.</p>
+                    <p>Confirm precise locations and times.</p>
                     <div class="flow-arrow"></div>
                 </div>
                 <div class="flow-step">
-                    <h4>4. EAT</h4>
-                    <p>You score the haul before it disappears.</p>
+                    <h4>4. SCORE</h4>
+                    <p>Secure food before it disappears.</p>
                 </div>
             </div>
         </div>
@@ -460,7 +440,7 @@
     <div id="confirmed-empty" class="hidden text-center py-20" style="padding: 4rem 2rem;">
         <img src="brand/pizza.png" class="empty-brand-img"
             style="max-width: 600px; margin: 0 auto 2rem auto; display: block;">
-        <h3 style="font-size: 3rem; color: #999;">THE HAUL IS EMPTY. PATIENCE IS A VIRTUE.</h3>
+        <h3 style="font-size: 3rem; color: #999;">NO ACTIVE EVENTS. PATIENCE IS A VIRTUE.</h3>
     </div>
 
     <div class="checkerboard"></div>
