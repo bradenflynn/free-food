@@ -102,10 +102,6 @@
             box-shadow: 12px 12px 0px var(--color-black);
         }
 
-        .card {
-            animation: fadeInUp 0.6s ease backwards;
-        }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -116,6 +112,27 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Page Load Fade */
+        body {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        body.loaded {
+            opacity: 1;
         }
 
         .card-img-wrap {
@@ -205,14 +222,63 @@
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1rem;
             }
 
             .section-label {
-                font-size: 4rem;
+                font-size: 3.5rem;
+                padding: 0 1rem;
             }
 
-            h1 {
-                font-size: 5rem !important;
+            .header-main {
+                padding: 2rem 1rem;
+            }
+
+            .header-main h1 {
+                font-size: 4.5rem;
+                line-height: 0.85;
+                margin-bottom: 0.5rem;
+            }
+
+            header>div:first-child {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            header div[style*="text-align: right"] {
+                text-align: left !important;
+            }
+
+            .btn-oval {
+                width: 100%;
+                padding: 1.2rem;
+                font-size: 1.3rem;
+            }
+
+            /* Mobile Flowchart */
+            .flowchart {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .flow-step {
+                padding: 2rem 1.5rem;
+            }
+
+            .flow-arrow {
+                right: auto;
+                bottom: -1.8rem;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 2rem;
+            }
+
+            /* Scroll Progress for Mobile */
+            #scroll-progress-wrap {
+                right: 10px;
+                width: 8px;
+                height: 150px;
             }
         }
 
@@ -267,6 +333,12 @@
             background: #fff;
             position: relative;
             box-shadow: 6px 6px 0px #000;
+            transition: transform 0.2s ease;
+        }
+
+        .flow-step:last-child {
+            background: #000;
+            color: #fff;
         }
 
         .flow-step h4 {
@@ -283,14 +355,18 @@
             line-height: 1.2;
         }
 
-        .flow-arrow {
-            position: absolute;
-            right: -1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            font-weight: 900;
-            z-index: 5;
+        .flow-arrow::before {
+            content: '⮕';
+        }
+
+        @media (max-width: 768px) {
+            .flow-arrow::before {
+                content: '⬇';
+            }
+
+            .flow-step:last-child .flow-arrow {
+                display: none;
+            }
         }
 
         .card-header-area {
@@ -333,6 +409,9 @@
             <div style="text-align: right;">
                 <p style="font-family: var(--font-header); font-size: 2rem; margin: 0;">USD PREMIER AGGREGATION</p>
                 <p style="font-weight: 900; margin: 0;">EST. 2026 | VERSION 2.0</p>
+                <p
+                    style="font-weight: 900; margin: 0; opacity: 0.3; font-size: 0.7rem; letter-spacing: 0.2rem; margin-top: 0.5rem;">
+                    BY BRADEN FLYNN</p>
             </div>
         </div>
 
@@ -352,19 +431,19 @@
                 <div class="flow-step">
                     <h4>1. SCAN</h4>
                     <p>AI monitors 100+ USD student org accounts.</p>
-                    <div class="flow-arrow">⮕</div>
+                    <div class="flow-arrow"></div>
                 </div>
                 <div class="flow-step">
                     <h4>2. DETECT</h4>
                     <p>Real-time identification of all free food flyers.</p>
-                    <div class="flow-arrow">⮕</div>
+                    <div class="flow-arrow"></div>
                 </div>
                 <div class="flow-step">
                     <h4>3. VERIFY</h4>
                     <p>We confirm the precise locations and times.</p>
-                    <div class="flow-arrow">⮕</div>
+                    <div class="flow-arrow"></div>
                 </div>
-                <div class="flow-step" style="background: #000; color: #fff;">
+                <div class="flow-step">
                     <h4>4. EAT</h4>
                     <p>You score the haul before it disappears.</p>
                 </div>
@@ -491,7 +570,7 @@
             const dateDisplay = formatDate(event.date);
 
             return `
-                <article class="card" style="animation-delay: ${index * 0.1}s">
+                <article class="card reveal">
                     <div class="card-img-wrap">
                         <span class="sticker sticker-top-left">@${event.source_handle}</span>
                         <img src="${imgUrl}" 
@@ -602,7 +681,26 @@
 
             confirmed.length === 0 ? confirmedEmpty.classList.remove('hidden') : confirmedEmpty.classList.add('hidden');
             general.length === 0 ? generalEmpty.classList.remove('hidden') : generalEmpty.classList.add('hidden');
+
+            // Initialize Reval Observer after rendering
+            initReveal();
         }
+
+        function initReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
 
         fetchEvents();
 
