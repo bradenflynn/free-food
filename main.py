@@ -99,17 +99,36 @@ async def run_discovery():
             print(f"Skipping {image_path} due to error.")
             continue
 
-        # Relaxed Filtering:
-        # 1. Allow events even if missing time/location (just warn)
-        if event_data.get('has_time_and_location') is False:
-            print(f"⚠️ Warning: @{handle} post {post_id} is missing time or location, but saving anyway.")
-            
-        # 2. Must be a current or future event (Today + Future)
+        has_food = event_data.get('has_free_food', False)
+        is_business = event_data.get('is_business_related', False)
+        is_before_cutoff = event_data.get('is_before_semester_cutoff', True)
+        has_date = event_data.get('date') not in [None, 'TBD', 'Unknown', 'Unknown/TBC', '']
+        has_time = event_data.get('time') not in [None, 'TBD', 'Unknown', 'Unknown/TBC', '']
+
+        # 1. Absolute Date Cutoff (May 26, 2026)
+        if not is_before_cutoff:
+            print(f"🚫 Removing @{handle} post {post_id}: After semester cutoff (May 26).")
+            continue
+
+        # 2. Must be a current or future event
         if event_data.get('is_current_or_future_event') is False:
             print(f"Skipping {handle} post {post_id}: Event has already passed.")
             continue
 
-        # Save event if it passes filters
+        # 3. Quality Gate
+        if has_food:
+            # Any confirmed food event is valuable even if missing time/location
+            pass
+        else:
+            # Non-food events MUST have a real date + time AND be business-related
+            if not has_date or not has_time:
+                print(f"🚫 Removing @{handle} post {post_id}: Missing valid date or time (not an event).")
+                continue
+            if not is_business:
+                print(f"🚫 Removing @{handle} post {post_id}: Non-business event, no food.")
+                continue
+
+        # Save event if it passes all gates
         save_event(event_data, handle, image_path, post_id)
     
     # 4. Export for GitHub Pages
