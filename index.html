@@ -420,9 +420,14 @@
         </div>
 
         <div style="display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap;">
-            <button onclick="exportToCalendar()" class="btn-oval">SYNC</button>
-            <div class="btn-oval active">
-                <span id="pending-count">0</span>&nbsp;ITEMS DISCOVERED
+            <button onclick="exportToCalendar()" class="btn-oval" style="font-size: 1.2rem;">SYNC TO GOOGLE
+                CALENDAR</button>
+            <div class="btn-oval active" style="font-size: 1.2rem;">
+                <span id="confirmed-count">0</span>&nbsp;FOOD FLIERS FOUND
+            </div>
+            <div
+                style="font-family: var(--font-header); font-size: 1.2rem; display: flex; align-items: center; opacity: 0.5;">
+                [<span id="pending-count">0</span>&nbsp;TOTAL EVENTS ON RADAR]
             </div>
         </div>
     </header>
@@ -660,22 +665,23 @@
             today.setHours(0, 0, 0, 0);
 
             allFutureEvents = events.filter(e => {
-                if (!e.date) return true;
+                if (!e.date) return false; // Strictly future only
                 const eventDate = new Date(e.date + 'T00:00:00');
-                if (isNaN(eventDate.getTime())) return true;
+                if (isNaN(eventDate.getTime())) return false;
+
+                // Strict comparison: event must be today or later
                 return eventDate >= today;
             });
 
             allFutureEvents.sort((a, b) => {
-                if (!a.date) return 1;
-                if (!b.date) return -1;
                 return a.date.localeCompare(b.date);
             });
 
-            document.getElementById('pending-count').innerHTML = allFutureEvents.length;
-
             const confirmed = allFutureEvents.filter(e => e.has_free_food);
             const general = allFutureEvents.filter(e => !e.has_free_food);
+
+            document.getElementById('confirmed-count').innerHTML = confirmed.length;
+            document.getElementById('pending-count').innerHTML = allFutureEvents.length;
 
             confirmedGrid.innerHTML = confirmed.map((e, i) => createCard(e, i)).join('');
             generalGrid.innerHTML = general.map((e, i) => createCard(e, i + confirmed.length)).join('');
