@@ -691,18 +691,21 @@
         function animateCount(id, Target) {
             const el = document.getElementById(id);
             if (!el) return;
-            let current = 0;
-            const duration = 1500;
-            const stepTime = Math.abs(Math.floor(duration / Target));
-            if (Target === 0) {
-                el.innerText = "0";
-                return;
-            }
-            const timer = setInterval(() => {
-                current += 1;
-                el.innerText = current;
-                if (current >= Target) clearInterval(timer);
-            }, stepTime);
+            el.innerText = "0";
+
+            // 1 second delay to allow for page load / entrance
+            setTimeout(() => {
+                let current = 0;
+                const duration = 1500;
+                if (Target === 0) return;
+
+                const stepTime = Math.max(duration / Target, 50); // Minimum 50ms per step
+                const timer = setInterval(() => {
+                    current += 1;
+                    el.innerText = current;
+                    if (current >= Target) clearInterval(timer);
+                }, stepTime);
+            }, 1000);
         }
 
         function initReveal() {
