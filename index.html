@@ -362,30 +362,32 @@
         }
 
         .card-header-area {
-            min-height: 160px;
+            min-height: 100px;
             /* Forced alignment for symmetry */
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .card-title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             line-height: 1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            margin-bottom: 0.2rem;
         }
 
         .card-detail-group {
-            min-height: 140px;
+            min-height: 80px;
             /* Alignment for the tan bar */
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            gap: 0.5rem;
+            gap: 0.2rem;
         }
     </style>
 </head>
@@ -419,24 +421,19 @@
 
     <section class="tan-section">
         <div style="max-width: 1000px; margin: 0 auto;">
-            <div class="flowchart">
+            <div class="flowchart" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="flow-step">
                     <h4>1. SCAN</h4>
-                    <p>AI monitors 100+ USD student org accounts.</p>
+                    <p>AI monitors 100+ USD accounts. Refreshed constantly.</p>
                     <div class="flow-arrow"></div>
                 </div>
                 <div class="flow-step">
-                    <h4>2. DETECT</h4>
-                    <p>Real-time identification of free food.</p>
-                    <div class="flow-arrow"></div>
-                </div>
-                <div class="flow-step">
-                    <h4>3. VERIFY</h4>
+                    <h4>2. VERIFY</h4>
                     <p>Confirm precise locations and times.</p>
                     <div class="flow-arrow"></div>
                 </div>
                 <div class="flow-step">
-                    <h4>4. SCORE</h4>
+                    <h4>3. SCORE</h4>
                     <p>Secure food before it disappears.</p>
                 </div>
             </div>
