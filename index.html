@@ -411,10 +411,9 @@
             style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
             <h1>THE FREE LUNCH</h1>
             <div style="text-align: right;">
-                <p style="font-family: var(--font-header); font-size: 2rem; margin: 0;">USD</p>
-                <p style="font-weight: 900; margin: 0;">EST. 2026 | VERSION 2.0</p>
+                <p style="font-weight: 900; margin: 0; font-size: 1.2rem;">EST. 2026 | VERSION 2.0</p>
                 <p
-                    style="font-weight: 900; margin: 0; opacity: 0.3; font-size: 0.7rem; letter-spacing: 0.2rem; margin-top: 0.5rem;">
+                    style="font-weight: 900; margin: 0; opacity: 0.4; font-size: 0.9rem; letter-spacing: 0.2rem; margin-top: 0.5rem;">
                     BY BRADEN FLYNN</p>
             </div>
         </div>
@@ -475,12 +474,14 @@
         <h3 style="font-size: 3rem; color: #999;">ALL QUIET ON THE RADAR.</h3>
     </div>
 
-    <footer class="tan-section" style="margin-top: 4rem; padding: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;">
-            <h2 style="font-size: 4rem;">THE FREE LUNCH</h2>
-            <div style="text-align: right; font-weight: 900;">
-                <p>CONTACT: INFO@FREEFOODFINDER.USD</p>
-                <p>EST. 2026</p>
+    <footer class="tan-section" style="margin-top: 4rem; padding: 4rem 2rem;">
+        <div
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; text-align: center;">
+            <h2 style="font-size: 4rem; margin: 0;">THE FREE LUNCH</h2>
+            <div style="font-weight: 900; opacity: 0.6; margin-top: 2rem;">
+                <p style="margin-bottom: 0.5rem;">WANT TO ADD A NEW CLUB TO THE RADAR?</p>
+                <a href="mailto:Bradenflynn@sandiego.edu"
+                    style="color: black; text-decoration: underline; font-size: 1.2rem; cursor: pointer;">Bradenflynn@sandiego.edu</a>
             </div>
         </div>
     </footer>
@@ -593,9 +594,8 @@
                             </div>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
-                            <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem;">VIEW SOURCE</a>
-                            <button onclick="handleDismiss(${event.id})" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem;">FORGET IT</button>
+                        <div style="display: flex; justify-content: center; margin-top: 2rem;">
+                            <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem; width: 100%; max-width: 300px; text-align: center;">VIEW SOURCE</a>
                         </div>
                     </div>
                 </article>
