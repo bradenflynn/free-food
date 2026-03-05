@@ -36,6 +36,16 @@
             line-height: 0.9;
         }
 
+        @keyframes drift {
+            from {
+                background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            }
+
+            to {
+                background-position: 20px 20px, 20px 30px, 30px 10px, 10px 20px;
+            }
+        }
+
         .checkerboard {
             height: 24px;
             background-image:
@@ -47,6 +57,7 @@
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
             border-top: var(--border-width) solid var(--color-black);
             border-bottom: var(--border-width) solid var(--color-black);
+            animation: drift 5s linear infinite;
         }
 
         .tan-section {
@@ -84,9 +95,24 @@
             color: var(--color-white);
         }
 
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+            }
+        }
+
         .btn-oval.active {
             background: var(--color-black);
             color: var(--color-white);
+            animation: pulseGlow 2s infinite;
         }
 
         .card {
@@ -100,6 +126,11 @@
         .card:hover {
             transform: translateY(-8px);
             box-shadow: 12px 12px 0px var(--color-black);
+        }
+
+        .btn-oval:hover {
+            transform: translateY(-4px);
+            box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
         }
 
         @keyframes fadeInUp {
@@ -412,9 +443,6 @@
             <h1>THE FREE LUNCH</h1>
             <div style="text-align: right;">
                 <p style="font-weight: 900; margin: 0; font-size: 1.2rem;">EST. 2026 | VERSION 2.0</p>
-                <p
-                    style="font-weight: 900; margin: 0; opacity: 0.4; font-size: 0.9rem; letter-spacing: 0.2rem; margin-top: 0.5rem;">
-                    BY BRADEN FLYNN</p>
             </div>
         </div>
 
@@ -595,7 +623,7 @@
                         </div>
                         
                         <div style="display: flex; justify-content: center; margin-top: 2rem;">
-                            <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem; width: 100%; max-width: 300px; text-align: center;">VIEW SOURCE</a>
+                            <a href="https://www.instagram.com/p/${event.post_id}/" target="_blank" class="btn-oval" style="font-size: 1.1rem; padding: 0.8rem; width: 100%; max-width: 300px; text-align: center;">VIEW POST</a>
                         </div>
                     </div>
                 </article>
