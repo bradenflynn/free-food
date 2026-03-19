@@ -1,8 +1,8 @@
 # 🍕 Free Food Finder (FFF)
 
 ### 🌎 **[VIEW DASHBOARD (Public Link)](https://bradenflynn.github.io/free-food/)**
-### 🖥️ **[OPEN DASHBOARD (Local File)](file:///Users/bradenflynn/Downloads/free%20food/index.html)**
-*Terminal command to open locally:* `open "/Users/bradenflynn/Downloads/free food/index.html"`
+### 🖥️ **[OPEN DASHBOARD (Local File)](file:///Users/bradenflynn/Downloads/free%20food/frontend/index.html)**
+*Terminal command to open locally:* `open "frontend/index.html"`
 
 ---
 
@@ -53,11 +53,13 @@ Manage your first 10 paying users via the **Buy Me A Coffee** dashboard linked i
 ---
 
 ## 🛠 Project Structure
-- `FreeFoodFinder.command`: The main launcher script.
-- `index.html`: The dashboard UI.
-- `main.py`: The brain that coordinates the scan and AI.
-- `ig_content_gen.py`: Auto-generator for IG Posts/Stories.
-- `newsletter_engine.py`: Daily email blast system.
-- `handles.txt`: The list of Instagram accounts being tracked.
-- `downloads/`: Folder containing all current event flyers.
-- `marketing/`: Generated social media assets.
+- `FreeFoodFinder.command`: The main launcher script (root).
+- `frontend/index.html`: The dashboard UI.
+- `backend/core/main.py`: Core scraping and AI vision.
+- `backend/api/api.py`: Dashboard local API.
+- `backend/engines/`: Content generation and newsletter systems.
+- `data/config/handles.txt`: Instagram tracking list.
+- `data/database/`: Local SQLite storage.
+- `data/exports/`: Processed data for frontend.
+- `downloads/`: Scraped event flyers.
+- `scripts/`: Automation and start scripts.
