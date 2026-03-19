@@ -1,8 +1,8 @@
 # 🍕 Free Food Finder (FFF)
 
 ### 🌎 **[VIEW DASHBOARD (Public Link)](https://bradenflynn.github.io/free-food/)**
-### 🖥️ **[OPEN DASHBOARD (Local File)](file:///Users/bradenflynn/Downloads/free%20food/frontend/index.html)**
-*Terminal command to open locally:* `open "frontend/index.html"`
+### 🖥️ **[OPEN DASHBOARD (Local File)](file:///Users/bradenflynn/Downloads/free%20food/index.html)**
+*Terminal command to open locally:* `open "index.html"`
 
 ---
 
@@ -54,7 +54,7 @@ Manage your first 10 paying users via the **Buy Me A Coffee** dashboard linked i
 
 ## 🛠 Project Structure
 - `FreeFoodFinder.command`: The main launcher script (root).
-- `frontend/index.html`: The dashboard UI.
+- `index.html`: The dashboard UI.
 - `backend/core/main.py`: Core scraping and AI vision.
 - `backend/api/api.py`: Dashboard local API.
 - `backend/engines/`: Content generation and newsletter systems.

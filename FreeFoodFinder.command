@@ -29,7 +29,7 @@ git push origin main
 echo "✅ Scan complete & Shared!"
 
 # Open the dashboard ONLY after the scan and sync are complete
-open frontend/index.html
+open index.html
 
 echo "🌐 Refresh your public GitHub Pages link to see results."
 
